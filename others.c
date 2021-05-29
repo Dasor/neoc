@@ -18,3 +18,16 @@ char *fixString(char *string){
   }
   return fstring;
 }
+
+char *fillString(char a, int x){
+  char *result = malloc(sizeof(char)*x);
+  for(int i = 0; i<x-1; i++){
+    result[i]=a;
+  }
+  
+  result[x]='\0';
+
+  return result;
+
+}
+

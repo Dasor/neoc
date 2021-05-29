@@ -3,5 +3,6 @@
 
 
 char *getOS();
-
+char *getHost();
+char *getUser();
 #endif
