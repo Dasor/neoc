@@ -30,13 +30,11 @@ char *getOS(){
 }
 
 char *getHost(){
-  char *host;  
-  char hostname[256];
-  if(gethostname(hostname, 256) == -1){
+  char *host = calloc(sizeof(char),HOST_NAME_MAX);  
+  if(gethostname(host, HOST_NAME_MAX) == -1){
     printf("Cannot read hostname");
     return NULL;
   }
-  host = hostname;
   return host;
 
 
