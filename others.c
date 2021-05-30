@@ -20,12 +20,12 @@ char *fixString(char *string){
 }
 
 char *fillString(char a, int x){
-  char *result = malloc(sizeof(char)*x);
+  char *result = calloc(sizeof(char),x);
   for(int i = 0; i<x-1; i++){
     result[i]=a;
   }
   
-  result[x]='\0';
+  result[x+1]='\0';
 
   return result;
 
