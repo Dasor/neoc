@@ -8,16 +8,15 @@
 char *getOS(){
  #ifdef __linux__
   
-    int lineNumber = 1;
     FILE *fpointer = fopen ("/etc/os-release","r");
-    int count = 0;
     char *line = malloc(sizeof(char)*256); /* or other suitable maximum line size */
-    
+    char *token = calloc(sizeof(char),11);
     if ( fpointer != NULL ){
-      while (fgets(line, 256 , fpointer) != NULL && count < lineNumber) /* read a line */{
-        count++;
+      while (strcmp(token,"PRETTY_NAME") != 0 && fgets(line, 256 , fpointer) != NULL){
+        memcpy(token,line,11);
       }
       fclose(fpointer);
+      free(token);
     }else{
       printf("cannot read OS");
       return NULL;
