@@ -4,6 +4,8 @@
 #include "others.h"
 #include <unistd.h>
 #include <limits.h>
+#include <sys/utsname.h>
+
 
 #ifdef __linux__
 
@@ -72,3 +74,11 @@ char *getUser(){
   return user;
 }
   #endif
+
+char *getKernel(){
+  struct utsname *kernel = malloc(sizeof(kernel));
+  uname(kernel);
+
+  return kernel->release;
+  
+}
