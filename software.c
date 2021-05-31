@@ -12,10 +12,10 @@
 char *getOS(){
   
     FILE *fpointer = fopen ("/etc/os-release","r");
-    char *line = malloc(sizeof(char)*256); /* or other suitable maximum line size */
-    char *token = calloc(sizeof(char),11);
+    char *line = malloc(sizeof(char)*50); /* or other suitable maximum line size */
+    char *token = calloc(sizeof(char),12);
     if ( fpointer != NULL ){
-      while (strcmp(token,"PRETTY_NAME") != 0 && fgets(line, 256 , fpointer) != NULL){
+      while (strcmp(token,"PRETTY_NAME") != 0 && fgets(line, 50 , fpointer) != NULL){
         memcpy(token,line,11);
       }
       fclose(fpointer);
@@ -76,7 +76,7 @@ char *getUser(){
   #endif
 
 char *getKernel(){
-  struct utsname *kernel = malloc(sizeof(kernel));
+  struct utsname *kernel = malloc(sizeof(struct utsname));
   if(uname(kernel) != 0){
     printf("Cannot read kernel");
     return NULL;

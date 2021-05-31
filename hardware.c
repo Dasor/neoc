@@ -48,12 +48,12 @@ Board getBoard(){
     }
 
     if(strcmp(version, "x.x")== 0){
+      free (version);
       version = "\0";
     }
 
     fclose(fpointer2);
     result.version = version;
-
 
   #endif
 
