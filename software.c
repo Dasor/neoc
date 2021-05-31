@@ -12,11 +12,12 @@
 char *getOS(){
   
     FILE *fpointer = fopen ("/etc/os-release","r");
-    char *line = malloc(sizeof(char)*50); /* or other suitable maximum line size */
+    char read [50];
+    char *line;
     char *token = calloc(sizeof(char),12);
     if ( fpointer != NULL ){
-      while (strcmp(token,"PRETTY_NAME") != 0 && fgets(line, 50 , fpointer) != NULL){
-        memcpy(token,line,11);
+      while (strcmp(token,"PRETTY_NAME") != 0 && fgets(read, 50 , fpointer) != NULL){
+        memcpy(token,read,11);
       }
       fclose(fpointer);
       free(token);
@@ -24,7 +25,8 @@ char *getOS(){
       printf("cannot read OS");
       return NULL;
     }
-
+    line = malloc(sizeof(char));
+    strcpy(line,read);
     char *string = fixString(line);
 
     return string;
