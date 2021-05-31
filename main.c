@@ -15,7 +15,7 @@ struct PcRep{
   char *bits;
   char *name;
   char *user;
-  char *board;
+  Board board;
 
 };
 
@@ -33,5 +33,5 @@ int main(){
   printf("%s@%s\n",computer.user,computer.name);
   printf("%s\n",bars);
   printf("OS: %s %s\n",computer.os,computer.bits);
-  printf("MotherBoard: %s",computer.board);//computer.board has his own \n//
+  printf("MotherBoard: %s %s\n",computer.board.chip,computer.board.version);//computer.board has his own \n//
 }
