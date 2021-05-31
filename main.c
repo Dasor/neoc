@@ -12,6 +12,7 @@
 
 struct PcRep{
   char *os;
+  char *bits;
   char *name;
   char *user;
   char *board;
@@ -23,6 +24,7 @@ typedef struct PcRep Pc;
 int main(){
   Pc computer;
   computer.os = getOS();
+  computer.bits = getBits();
   computer.name = getHost();
   computer.user = getUser();
   computer.board = getBoard();
@@ -30,6 +32,6 @@ int main(){
   char *bars = fillString('-',n);
   printf("%s@%s\n",computer.user,computer.name);
   printf("%s\n",bars);
-  printf("OS: %s\n",computer.os);
+  printf("OS: %s %s\n",computer.os,computer.bits);
   printf("MotherBoard: %s",computer.board);//computer.board has his own \n//
 }

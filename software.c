@@ -5,8 +5,9 @@
 #include <unistd.h>
 #include <limits.h>
 
+#ifdef __linux__
+
 char *getOS(){
- #ifdef __linux__
   
     FILE *fpointer = fopen ("/etc/os-release","r");
     char *line = malloc(sizeof(char)*256); /* or other suitable maximum line size */
@@ -24,10 +25,33 @@ char *getOS(){
 
     char *string = fixString(line);
 
-  #endif
     return string;
 }
 
+char *getBits(){
+
+  FILE *fpointer = fopen ("/proc/cpuinfo","r");
+  char *line = malloc(sizeof(char)*1000); /* or other suitable maximum line size */
+  char *token = calloc(sizeof(char),5);
+  if ( fpointer != NULL ){
+    while (strcmp(token,"flags") != 0 && fgets(line, 256 , fpointer) != NULL){
+        memcpy(token,line,5);
+      }
+      free(token);
+  if(strstr(line," lm ") != NULL){
+    fclose(fpointer);
+    return "x86_64";  
+  }else{
+    fclose(fpointer);
+    return "x86";
+  }
+
+  }
+
+  fclose(fpointer);
+  return NULL;
+
+}
 char *getHost(){
   char *host = calloc(sizeof(char),HOST_NAME_MAX);  
   if(gethostname(host, HOST_NAME_MAX) == -1){
@@ -47,3 +71,4 @@ char *getUser(){
   }
   return user;
 }
+  #endif

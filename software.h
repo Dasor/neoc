@@ -3,6 +3,9 @@
 
 
 char *getOS();
+char *getBits();
 char *getHost();
 char *getUser();
+
+
 #endif
