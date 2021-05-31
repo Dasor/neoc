@@ -54,8 +54,8 @@ char *getBits(){
 }
 char *getHost(){
   char *host = calloc(sizeof(char),HOST_NAME_MAX);  
-  if(gethostname(host, HOST_NAME_MAX) == -1){
-    printf("Cannot read hostname");
+  if(gethostname(host, HOST_NAME_MAX) != 0){
+    printf("Cannot read hostname\n");
     return NULL;
   }
   return host;
@@ -65,8 +65,8 @@ char *getHost(){
 
 char *getUser(){
   char *user = malloc(sizeof(char)*LOGIN_NAME_MAX);
-  if(getlogin_r(user,LOGIN_NAME_MAX) == -1){
-    printf("Cannot read username");
+  if(getlogin_r(user,LOGIN_NAME_MAX) != 0){
+    printf("Cannot read username\n");
     return NULL;
   }
   return user;
