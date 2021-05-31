@@ -77,8 +77,13 @@ char *getUser(){
 
 char *getKernel(){
   struct utsname *kernel = malloc(sizeof(kernel));
-  uname(kernel);
-
-  return kernel->release;
+  if(uname(kernel) != 0){
+    printf("Cannot read kernel");
+    return NULL;
+  }
+  char *result = malloc(sizeof(char)*256);
+  strcpy(result,kernel->release);
+  free(kernel);
+  return result;
   
 }
