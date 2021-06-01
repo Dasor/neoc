@@ -39,6 +39,7 @@ int main(){
   printf("Kernel: %s\n",computer.kernel);
 
   // os bits and board.version are not free since valgrid says is uselles//
+  free(computer.os);
   free(computer.name);
   free(computer.user);
   free(computer.board.chip);

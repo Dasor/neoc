@@ -3,7 +3,8 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-char *fixString(char *string){
+char *fixString(char *ptr){
+  char *string = ptr;
   string = strchr(string,'"');
   int j, n = strlen(string);
   for (int i = j = 0; i < n; i++){
