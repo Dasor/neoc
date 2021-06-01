@@ -35,10 +35,10 @@ char *getOS(){
 char *getBits(){
 
   FILE *fpointer = fopen ("/proc/cpuinfo","r");
-  char *line = malloc(sizeof(char)*1000); /* or other suitable maximum line size */
+  char line [1000];
   char *token = calloc(sizeof(char),6);
   if ( fpointer != NULL ){
-    while (strcmp(token,"flags") != 0 && fgets(line, 256 , fpointer) != NULL){
+    while (strcmp(token,"flags") != 0 && fgets(line, 1000 , fpointer) != NULL){
         memcpy(token,line,5);
       }
       free(token);
