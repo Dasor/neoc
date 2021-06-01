@@ -25,18 +25,18 @@ char *getOS(){
       printf("cannot read OS");
       return NULL;
     }
-    line = malloc(sizeof(char));
+    line = malloc(sizeof(char)*strlen(read)+1);
     strcpy(line,read);
-    char *string = fixString(line);
+    line = fixString(line);
 
-    return string;
+    return line;
 }
 
 char *getBits(){
 
   FILE *fpointer = fopen ("/proc/cpuinfo","r");
   char *line = malloc(sizeof(char)*1000); /* or other suitable maximum line size */
-  char *token = calloc(sizeof(char),5);
+  char *token = calloc(sizeof(char),6);
   if ( fpointer != NULL ){
     while (strcmp(token,"flags") != 0 && fgets(line, 256 , fpointer) != NULL){
         memcpy(token,line,5);

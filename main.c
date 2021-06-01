@@ -43,4 +43,5 @@ int main(){
   free(computer.user);
   free(computer.board.chip);
   free(computer.kernel);
+  free(bars);
 }
