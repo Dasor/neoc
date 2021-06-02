@@ -12,55 +12,47 @@
 
 char *getOS(){
   
-    FILE *fpointer = fopen ("/etc/os-release","r");
-    char read [50];
-    char *line;
-    char *result;
-    char *tmp;
-    char *token = calloc(sizeof(char),12);
-    if ( fpointer != NULL ){
-      while (strcmp(token,"PRETTY_NAME") != 0 && fgets(read, 50 , fpointer) != NULL){
-        memcpy(token,read,11);
-      }
-      fclose(fpointer);
-      free(token);
+  FILE *fpointer = fopen ("/etc/os-release","r");
+  char read [50];
+  char *line;
+  char *result;
+  char *tmp;
+  char *token = calloc(sizeof(char),12);
+
+  if ( fpointer != NULL ){
+    while (strcmp(token,"PRETTY_NAME") != 0 && fgets(read, 50 , fpointer) != NULL){
+      memcpy(token,read,11);
+    }
+
+    fclose(fpointer);
+    free(token);
+
     }else{
       printf("cannot read OS\n");
       return NULL;
     }
+
     line = malloc(sizeof(char)*strlen(read)+1);
     strcpy(line,read);
     tmp = fixString(line);
     result= malloc(sizeof(char)*strlen(tmp)+1);
     strcpy(result,tmp);
-    free(line);
+    free(line); // we free both line and tmp since tmp points ahead of line but on the same memory//
     return result;
 }
 
 char *getBits(){
 
-  FILE *fpointer = fopen ("/proc/cpuinfo","r");
-  char line [1000];
-  char *token = calloc(sizeof(char),6);
-  if ( fpointer != NULL ){
-    while (strcmp(token,"flags") != 0 && fgets(line, 1000 , fpointer) != NULL){
-        memcpy(token,line,5);
-      }      
-
-    free(token);
-    if(strstr(line," lm ") != NULL){
-      fclose(fpointer);
-      return "x86_64";  
-    }else{
-      fclose(fpointer);
-      return "x86";
-    } 
-
+  struct utsname *bits = malloc(sizeof(struct utsname));
+  if(uname(bits) != 0){
+    printf("Cannot read bits\n");
+    return NULL;
   }
-  
-  printf("Cannot read bits\n");
-  fclose(fpointer);
-  return NULL;
+  char *result = malloc(sizeof(char)*strlen(bits->machine)+1);
+  strcpy(result,bits->machine);
+  free(bits);
+  return result;   
+
 
 }
 char *getHost(){
@@ -93,9 +85,10 @@ char *getKernel(){
     printf("Cannot read kernel");
     return NULL;
   }
-  char *result = malloc(sizeof(char)*256);
+  char *result = malloc(sizeof(char)*strlen(kernel->release)+1);
   strcpy(result,kernel->release);
   free(kernel);
   return result;
   
 }
+
