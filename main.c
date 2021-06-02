@@ -38,10 +38,9 @@ int main(){
   printf("MotherBoard: %s %s\n",computer.board.chip,computer.board.version);
   printf("Kernel: %s\n",computer.kernel);
 
-  // os bits and board.version are not free since valgrid says is uselles//
+  free(computer.board.version);
   free(computer.os);
   free(computer.name);
-  free(computer.user);
   free(computer.board.chip);
   free(computer.kernel);
   free(bars);

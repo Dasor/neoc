@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <limits.h>
 #include <sys/utsname.h>
+#include <pwd.h>
 
 
 #ifdef __linux__
@@ -74,19 +75,15 @@ char *getHost(){
 }
 
 char *getUser(){
-  char *user = malloc(sizeof(char)*LOGIN_NAME_MAX);
-  if(getlogin_r(user,LOGIN_NAME_MAX) != 0){ //an error may occur on 32 bits systems so I try another function//
-    #include <pwd.h>
-    struct passwd *pws;
-    if(getpwuid(geteuid()) == NULL){
-      printf("cannot read user\n");
-      return NULL;
+  struct passwd *pws;
+  if(( pws = getpwuid(geteuid())) == NULL){
+    printf("cannot read user\n");
+    return NULL;
     }
 
-    pws = getpwuid(geteuid()); 
+    
     return pws->pw_name;
-  }
-  return user;
+  
 }
   #endif
 

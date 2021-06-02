@@ -31,10 +31,13 @@ Board getBoard(){
       return result;
     }
 
+
+    chip[strlen(chip)-1] = '\0'; //deletes \n //
+
+    result.chip = malloc(sizeof(char)*strlen(chip)+1);
+    strcpy(result.chip,chip);
+    free(chip);
     fclose(fpointer);
-    int len = strlen(chip); // chip has his own /n but I dont want it//
-    chip[len-1] = '\0';
-    result.chip = chip;
 
     FILE *fpointer2 = fopen ("/sys/devices/virtual/dmi/id/board_version","r");
     char *version = calloc(sizeof(char),4); //I suppose there can´t be a bigger version that x.x// 
@@ -48,13 +51,16 @@ Board getBoard(){
     }
 
     if(strcmp(version, "x.x")== 0){
-      free (version);
-      version = "\0";
+      result.version = malloc(sizeof(char));
+      strcpy(result.version,"\0");
+    }else{
+      result.version = malloc(sizeof(char)*strlen(version)+1);
+      strcpy(result.version,version);
     }
-
+  
+    free(version);
     fclose(fpointer2);
-    result.version = version;
-
+   
   #endif
 
       return result;
