@@ -7,5 +7,6 @@ char *getBits();
 char *getHost();
 char *getUser();
 char *getKernel();
+long getUptime();
 
 #endif

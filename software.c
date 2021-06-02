@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <limits.h>
 #include <sys/utsname.h>
+#include <sys/sysinfo.h>
 #include <pwd.h>
 
 
@@ -92,3 +93,21 @@ char *getKernel(){
   
 }
 
+long getUptime(){
+
+  const long minute = 60;
+  const long hour = minute *60;
+  const long day = hour *24;
+
+  long result;
+  struct sysinfo *si = malloc(sizeof(struct sysinfo));
+  if(sysinfo(si) != 0){
+    printf("cannot read uptime\n");
+    return -1;
+  }
+
+  result = si->uptime;
+  free(si);
+  return result;
+
+}

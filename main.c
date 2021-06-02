@@ -17,6 +17,7 @@ struct PcRep{
   char *user;
   Board board;
   char *kernel;
+  long uptime;
 
 };
 
@@ -30,6 +31,7 @@ int main(){
   computer.user = getUser();
   computer.board = getBoard();
   computer.kernel = getKernel();
+  computer.uptime = getUptime();
   int n = strlen(computer.user)+strlen(computer.name)+2;
   char *bars = fillString('-',n);
   printf("%s@%s\n",computer.user,computer.name);
@@ -37,6 +39,7 @@ int main(){
   printf("OS: %s %s\n",computer.os,computer.bits);
   printf("MotherBoard: %s %s\n",computer.board.chip,computer.board.version);
   printf("Kernel: %s\n",computer.kernel);
+  printf ("Uptime : %ld hours, %ld mins\n", (computer.uptime % 86400) / 3600, (computer.uptime % 3600) / 60);
 
   free(computer.board.version);
   free(computer.os);
@@ -44,4 +47,5 @@ int main(){
   free(computer.board.chip);
   free(computer.kernel);
   free(bars);
+  free(computer.bits);
 }
