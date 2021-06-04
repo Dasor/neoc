@@ -11,6 +11,17 @@
 
 #ifdef __linux__
 
+
+struct PackagesRep {
+
+int npacks;
+char *manager;
+
+};
+
+typedef struct PackagesRep Pack;
+
+
 char *getOS(){
   
   FILE *fpointer = fopen ("/etc/os-release","r");
@@ -110,4 +121,51 @@ long getUptime(){
   free(si);
   return result;
 
+}
+
+Pack *getPacks(){
+
+//TO DO: read more pkg managers like slackware and gentoo//
+
+ FILE *fp;
+  char num [2];
+  char packs[5];
+  Pack *p = malloc(sizeof(Pack)*2);
+  p[1].npacks = 0;
+  
+  fp = popen("command -v pacman | wc -l", "r"); //Arch
+  fgets(num,2,fp);
+  if(strcmp(num,"0") == 0){
+    fp = popen ("command -v snap | wc -l","r");//debian//
+    fgets(num,2,fp);
+    if(strcmp(num,"0") == 0){
+      fp = popen ("command -v rpm | wc -l ","r");//red hat//
+      fgets(num,2,fp);
+      fp = popen ("rpm -qa | wc -l","r");
+      fgets(packs,5,fp);
+      p[0].npacks = atoi(packs);
+      p[0].manager = "rpm";
+      return p;
+      if(strcmp(num,"0") == 0){
+        printf("cannot read pkgs\n");
+        return NULL;
+      }
+    }
+    fp = popen("find /var/snap/ -maxdepth 1 | wc -l","r");
+    fgets(packs,5,fp);
+    p[0].npacks = atoi(packs);
+    p[0].npacks--;
+    fp = popen ("dpkg --list | wc --lines","r");
+    fgets(packs,5,fp);
+    p[1].npacks = atoi(packs);
+    p[0].manager = "snap";
+    p[1].manager = "apt";
+    return p;
+  }
+
+  fp = popen("pacman -Q | wc -l","r");
+  fgets(packs,5,fp);
+  p[0].npacks = atoi(packs);
+  p[0].manager = "pacman";
+  return p;
 }

@@ -18,6 +18,7 @@ struct PcRep{
   Board board;
   char *kernel;
   long uptime;
+  Pack *pkg;
 
 };
 
@@ -32,6 +33,7 @@ int main(){
   computer.board = getBoard();
   computer.kernel = getKernel();
   computer.uptime = getUptime();
+  computer.pkg = getPacks();
   int n = strlen(computer.user)+strlen(computer.name)+2;
   char *bars = fillString('-',n);
   printf("%s@%s\n",computer.user,computer.name);
@@ -39,8 +41,12 @@ int main(){
   printf("OS: %s %s\n",computer.os,computer.bits);
   printf("MotherBoard: %s %s\n",computer.board.chip,computer.board.version);
   printf("Kernel: %s\n",computer.kernel);
-  printf ("Uptime : %ld hours, %ld mins\n", (computer.uptime % 86400) / 3600, (computer.uptime % 3600) / 60);
-
+  printf("Uptime : %ld hours, %ld mins\n", (computer.uptime % 86400) / 3600, (computer.uptime % 3600) / 60);
+  if(computer.pkg[1].npacks == 0){
+    printf("Packages: %d (%s)\n",computer.pkg[0].npacks,computer.pkg[0].manager);
+  }else{
+    printf("Packages: %d (%s), %d (%s)\n",computer.pkg[0].npacks,computer.pkg[0].manager,computer.pkg[1].npacks,computer.pkg[1].manager);
+  }
   free(computer.board.version);
   free(computer.os);
   free(computer.name);
