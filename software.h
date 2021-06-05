@@ -18,5 +18,6 @@ char *getUser();
 char *getKernel();
 long getUptime();
 Pack *getPacks();
+char *getShell();
 
 #endif

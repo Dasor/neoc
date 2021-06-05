@@ -19,6 +19,7 @@ struct PcRep{
   char *kernel;
   long uptime;
   Pack *pkg;
+  char *shell;
 
 };
 
@@ -34,6 +35,7 @@ int main(){
   computer.kernel = getKernel();
   computer.uptime = getUptime();
   computer.pkg = getPacks();
+  computer.shell = getShell();
   int n = strlen(computer.user)+strlen(computer.name)+2;
   char *bars = fillString('-',n);
   printf("%s@%s\n",computer.user,computer.name);
@@ -47,6 +49,9 @@ int main(){
   }else{
     printf("Packages: %d (%s), %d (%s)\n",computer.pkg[0].npacks,computer.pkg[0].manager,computer.pkg[1].npacks,computer.pkg[1].manager);
   }
+  printf("Shell:%s\n",computer.shell);
+
+  free(computer.pkg);
   free(computer.board.version);
   free(computer.os);
   free(computer.name);

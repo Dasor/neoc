@@ -127,45 +127,81 @@ Pack *getPacks(){
 
 //TO DO: read more pkg managers like slackware and gentoo//
 
- FILE *fp;
+  FILE *fp;
   char num [2];
-  char packs[5];
+  char packs[6];
   Pack *p = malloc(sizeof(Pack)*2);
   p[1].npacks = 0;
   
   fp = popen("command -v pacman | wc -l", "r"); //Arch
   fgets(num,2,fp);
+  pclose(fp);
   if(strcmp(num,"0") == 0){
     fp = popen ("command -v snap | wc -l","r");//debian//
     fgets(num,2,fp);
     if(strcmp(num,"0") == 0){
       fp = popen ("command -v rpm | wc -l ","r");//red hat//
       fgets(num,2,fp);
-      fp = popen ("rpm -qa | wc -l","r");
-      fgets(packs,5,fp);
-      p[0].npacks = atoi(packs);
-      p[0].manager = "rpm";
-      return p;
+      pclose(fp);
       if(strcmp(num,"0") == 0){
         printf("cannot read pkgs\n");
+        pclose(fp);
         return NULL;
       }
+      fp = popen ("rpm -qa | wc -l","r");
+      fgets(packs,6,fp);
+      p[0].npacks = atoi(packs);
+      p[0].manager = "rpm";
+      pclose(fp);
+      return p;
+
     }
+    pclose(fp);
     fp = popen("find /var/snap/ -maxdepth 1 | wc -l","r");
-    fgets(packs,5,fp);
+    fgets(packs,6,fp);
     p[0].npacks = atoi(packs);
     p[0].npacks--;
-    fp = popen ("dpkg --list | wc --lines","r");
-    fgets(packs,5,fp);
+    fp = popen ("apt-cache pkgnames | wc -l","r");
+    fgets(packs,6,fp);
     p[1].npacks = atoi(packs);
     p[0].manager = "snap";
     p[1].manager = "apt";
+    pclose(fp);
     return p;
   }
 
   fp = popen("pacman -Q | wc -l","r");
-  fgets(packs,5,fp);
+  fgets(packs,6,fp);
   p[0].npacks = atoi(packs);
   p[0].manager = "pacman";
+  pclose(fp);
   return p;
+}
+
+char *getShell(){
+
+  char *shell = strrchr(getenv("SHELL"),'/');
+  shell[0] = ' ';
+  if(strcmp(shell," bash") == 0 || strcmp(shell," rbash") == 0){
+    FILE *fp;
+    int i = 0;
+    int j = 0;
+    char tmp[35];
+    fp = popen ("bash --version","r");
+    fgets(tmp,35,fp);
+    while(tmp[i] <48 || tmp[i]>57){
+      i++;
+    }
+    while(tmp[i] != '('){
+      tmp[j] = tmp[i];
+      j++;
+      i++;
+    }
+    tmp[j] = '\0';
+    shell = strcat(shell, " ");
+    shell = strcat(shell,tmp);
+    pclose(fp);
+    return shell;
+  }
+  return shell;
 }
