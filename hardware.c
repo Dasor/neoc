@@ -1,4 +1,5 @@
-
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
 #include<string.h>
 #include<stdio.h>
 #include<stdlib.h>
@@ -67,5 +68,61 @@ Board getBoard(){
     
 }
 
+char *getDisplay(){
 
+  FILE *fp;
+  char tmp[200];
+  char num[2];
+  fp = popen("command -v xrandr | wc -l","r");
+  fgets(num,2,fp);
 
+  if(strcmp(num,"0") == 0){
+    pclose(fp);
+    int w;
+    int h;
+
+    Display *display = XOpenDisplay(NULL);
+    if(display == NULL){    
+      return "Unknow";
+    }
+    Screen *screen = DefaultScreenOfDisplay(display);
+
+    w = WidthOfScreen(screen);
+    h = HeightOfScreen(screen);
+    
+    char width [17];
+    char height [17];
+    sprintf(width,"%d",w);
+    sprintf(height,"%d",h);
+
+    char *result = strcat(width, "x");
+    result = strcat(result,height);
+    XCloseDisplay(display);
+
+    char *resultcpy = malloc(sizeof(char)*strlen(result)+1);
+    strcpy(resultcpy,result);
+    return resultcpy;
+  }else{
+    pclose(fp);
+    char *line = calloc(sizeof(char),200);
+    char *linecpy;
+    int i = 0;
+    char *result = calloc(sizeof(char),200);
+    fp = popen("xrandr | grep \'*\'","r");
+    while(fgets(tmp,200,fp) != NULL){
+      strcpy(line,tmp);
+      linecpy = line +3;
+      while(linecpy[i] != ' '){
+        i++;
+      }
+      linecpy[i] = '\0'; 
+      result = strcat(result,linecpy);
+      result = strcat(result, " ");
+      i = 0;
+    }
+  free(line);
+  pclose(fp);
+  return result;
+  }   
+
+}

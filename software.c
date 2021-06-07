@@ -182,7 +182,8 @@ char *getShell(){
 
   char *shell = strrchr(getenv("SHELL"),'/');
   shell[0] = ' ';
-  if(strcmp(shell," bash") == 0 || strcmp(shell," rbash") == 0){
+
+  if(strcmp(shell," bash") == 0 || strcmp(shell," rbash") == 0){//get bash version
     FILE *fp;
     int i = 0;
     int j = 0;
@@ -203,5 +204,10 @@ char *getShell(){
     pclose(fp);
     return shell;
   }
+
   return shell;
+}
+
+char *getDE(){
+  return getenv("DESKTOP_SESSION");
 }

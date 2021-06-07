@@ -19,5 +19,6 @@ char *getKernel();
 long getUptime();
 Pack *getPacks();
 char *getShell();
+char *getDE();
 
 #endif

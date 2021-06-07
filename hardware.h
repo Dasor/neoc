@@ -12,5 +12,6 @@ struct BoardRep{
 typedef struct BoardRep Board;
 
 Board getBoard();
+char *getDisplay();
 
 #endif
