@@ -126,3 +126,57 @@ char *getDisplay(){
   }   
 
 }
+
+char *getCpu(){
+
+  FILE *fp = fopen("/proc/cpuinfo","r");
+  char *token = calloc(sizeof(char),11);
+  char read [1024];
+  if(fp != NULL){
+    while(strcmp(token,"model name") != 0 && fgets(read,1024,fp) != NULL){
+      memcpy(token,read,10);
+  }
+    fclose(fp);
+    free(token);
+  }else{
+    printf("Cannot read Cpu\n");
+    return NULL;
+  }
+
+  char *tmp = malloc(sizeof(char)*strlen(read)+1);
+  strcpy(tmp,read);
+  char *result = strchr(tmp,':');
+  char *resultcpy = malloc(sizeof(char)*strlen(result)+1);
+  strcpy(resultcpy,result);
+  free(tmp);
+  return resultcpy;
+
+}
+
+char *getGpu(){
+  FILE *fp = popen("lspci | grep VGA","r");
+  char read[1024];
+  char *tmp;
+  int i = 1;
+  fgets(read,1024,fp);
+  if((tmp = strchr(read,'[')) == NULL){
+    tmp = strchr(read,':');
+    tmp++;
+    char *result = malloc(sizeof(char)*strlen(tmp)+1);
+    strcpy(result,tmp);
+    pclose(fp);
+    return result;
+  }
+  
+  while(tmp[i] != ']'){
+    i++;
+  }
+  
+  char *result = malloc(sizeof(char)*i+1);
+  strncpy(result,tmp,i);
+  result[i] = '\0';
+  result[0] = ' ';
+  pclose(fp);
+  return result;
+
+}

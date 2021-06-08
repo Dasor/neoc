@@ -20,5 +20,6 @@ long getUptime();
 Pack *getPacks();
 char *getShell();
 char *getDE();
+char *getTerm();
 
 #endif

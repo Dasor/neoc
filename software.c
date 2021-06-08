@@ -7,7 +7,7 @@
 #include <sys/utsname.h>
 #include <sys/sysinfo.h>
 #include <pwd.h>
-
+#define MAX 1024
 
 #ifdef __linux__
 
@@ -209,5 +209,23 @@ char *getShell(){
 }
 
 char *getDE(){
-  return getenv("DESKTOP_SESSION");
+  return getenv("XDG_CURRENT_DESKTOP");
+}
+
+char *getTerm(){
+  FILE *fp;
+  char tmp[MAX];
+  int x;
+  fp = popen ("ps -o comm= -p \"$(($(ps -o ppid= -p \"$(($(ps -o sid= -p \"$$\")))\")))\"", "r");
+  fgets(tmp,MAX,fp);
+  x = strlen(tmp);
+  char *result = malloc(sizeof(char)*x+1);
+  strcpy(result,tmp);
+  if(result[x-2] == '-'){//weird gnome terminal bug
+    result[x-2] = '\0';
+  }else{//deleting \n //
+    result[x-1] = '\0';
+  }
+  pclose(fp);
+  return result;
 }

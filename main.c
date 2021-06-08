@@ -22,6 +22,9 @@ struct PcRep{
   char *shell;
   char *display;
   char *DE;
+  char *term;
+  char *cpu;
+  char *gpu;
 
 };
 
@@ -40,6 +43,9 @@ int main(){
   computer.shell = getShell();
   computer.display = getDisplay();
   computer.DE = getDE();
+  computer.term = getTerm();
+  computer.cpu = getCpu();
+  computer.gpu = getGpu();
   int n = strlen(computer.user)+strlen(computer.name)+2;
   char *bars = fillString('-',n);
   printf("%s@%s\n",computer.user,computer.name);
@@ -58,6 +64,13 @@ int main(){
   if(computer.DE != NULL){
     printf("DE: %s\n",computer.DE);
   }
+  printf("Terminal: %s\n",computer.term);
+  printf("CPU%s",computer.cpu);
+  printf("GPU:%s\n",computer.gpu);
+
+  free(computer.gpu);
+  free(computer.cpu);
+  free(computer.term);
   free(computer.display);
   free(computer.pkg);
   free(computer.board.version);
