@@ -160,10 +160,12 @@ char *getGpu(){
   int i = 1;
   fgets(read,1024,fp);
   if((tmp = strchr(read,'[')) == NULL){
-    tmp = strchr(read,':');
+    tmp = strrchr(read,':');
     tmp++;
-    char *result = malloc(sizeof(char)*strlen(tmp)+1);
+    i = strlen(tmp)+1;
+    char *result = malloc(sizeof(char)*i);
     strcpy(result,tmp);
+    result[i-2] = '\0';
     pclose(fp);
     return result;
   }
