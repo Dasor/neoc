@@ -157,7 +157,7 @@ char *getDisplay(){
 
   }else{
     pclose(fp);
-    if(system("xrandr >>/dev/null") != 0){
+    if(system("xrandr >>/dev/null 2>>/dev/null") != 0){
       char *result = Xnotfound();
       return result;
     }
