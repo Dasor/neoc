@@ -68,6 +68,80 @@ Board getBoard(){
     
 }
 
+char *Xnotfound(){
+  
+  int i = 0;
+  int j = 0;
+  int w;
+  int h;
+  char read [1024];
+  Display *display = XOpenDisplay(NULL);
+  if(display == NULL){    
+    FILE *fp = popen("command -v xdpyinfo | wc -l","r");
+    char num[2];
+    fgets(num,2,fp);
+    if(strcmp(num,"0") == 0){
+      pclose(fp);
+      fp = popen("command -v xwininfo | wc -l","r");
+      fgets(num,2,fp);
+      if(strcmp(num,"0") == 0){
+        return "Unkown";
+      }else{
+        pclose(fp);
+        fp = popen("xwininfo -root | grep geometry","r");
+        fgets(read,1024,fp);
+        while(read[i] < 48 || read[i]>57){
+          i++;
+        }
+        while(read[i] != '+'){
+          read[j] = read[i];
+          j++;
+          i++;
+        }
+        read[j] = '\0';
+        char *result = malloc(sizeof(char)*strlen(read)+1);
+        strcpy(result,read);
+        return result;
+      }
+    }else{
+      pclose(fp);
+      fp = popen("xdpyinfo | awk /dimensions:/","r");
+      fgets(read,1024,fp);
+      while(read[i] < 48 || read[i]>57){
+        i++;
+    }
+      while(read[i] != ' '){
+        read[j] = read[i];
+        j++;
+        i++;
+      }
+      read[j] = '\0';
+      char *result = malloc(sizeof(char)*strlen(read)+1);
+      strcpy(result,read);
+      return result;
+    } 
+  }
+  Screen *screen = DefaultScreenOfDisplay(display);
+
+  w = WidthOfScreen(screen);
+  h = HeightOfScreen(screen);
+    
+  char width [17];
+  char height [17];
+  sprintf(width,"%d",w);
+  sprintf(height,"%d",h);
+
+  char *result = strcat(width, "x");
+  result = strcat(result,height);
+  XCloseDisplay(display);
+
+  char *resultcpy = malloc(sizeof(char)*strlen(result)+1);
+  strcpy(resultcpy,result);
+  return resultcpy;
+
+  
+}
+
 char *getDisplay(){
 
   FILE *fp;
@@ -78,32 +152,15 @@ char *getDisplay(){
 
   if(strcmp(num,"0") == 0){
     pclose(fp);
-    int w;
-    int h;
+    char *result = Xnotfound();
+    return result;
 
-    Display *display = XOpenDisplay(NULL);
-    if(display == NULL){    
-      return "Unknow";
-    }
-    Screen *screen = DefaultScreenOfDisplay(display);
-
-    w = WidthOfScreen(screen);
-    h = HeightOfScreen(screen);
-    
-    char width [17];
-    char height [17];
-    sprintf(width,"%d",w);
-    sprintf(height,"%d",h);
-
-    char *result = strcat(width, "x");
-    result = strcat(result,height);
-    XCloseDisplay(display);
-
-    char *resultcpy = malloc(sizeof(char)*strlen(result)+1);
-    strcpy(resultcpy,result);
-    return resultcpy;
   }else{
     pclose(fp);
+    if(system("xrandr >>/dev/null") != 0){
+      char *result = Xnotfound();
+      return result;
+    }
     char *line = calloc(sizeof(char),200);
     char *linecpy;
     int i = 0;
@@ -126,6 +183,7 @@ char *getDisplay(){
   }   
 
 }
+
 
 char *getCpu(){
 

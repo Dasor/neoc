@@ -106,10 +106,6 @@ char *getKernel(){
 
 long getUptime(){
 
-  const long minute = 60;
-  const long hour = minute *60;
-  const long day = hour *24;
-
   long result;
   struct sysinfo *si = malloc(sizeof(struct sysinfo));
   if(sysinfo(si) != 0){
