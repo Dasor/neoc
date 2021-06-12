@@ -129,14 +129,16 @@ Pack *getPacks(){
   char packs[6];
   Pack *pkg = malloc(sizeof(Pack)*2);
   pkg[1].npacks = 0;
+  DIR *tmp; //just to free opendir()
 
-  if(opendir("/var/cache/pacman") != NULL){
+  if((tmp = opendir("/var/cache/pacman")) != NULL){
     pkg[0].manager = "pacman";
     fp = popen("pacman -Q | wc -l","r");
     pkg[0].npacks = atoi(fgets(packs,6,fp));
     pclose(fp);
+    free(tmp);
     return pkg;
-  }else if(opendir("/var/lib/snapd/snaps") != NULL){
+  }else if((tmp = opendir("/var/lib/snapd/snaps")) != NULL){
     pkg[0].manager = "snap";
     pkg[1].manager = "apt";
     fp = popen("find /var/snap/ -maxdepth 1 | wc -l","r");
@@ -147,13 +149,18 @@ Pack *getPacks(){
     fp = popen("apt-cache pkgnames | wc -l","r"); 
     pkg[1].npacks = atoi(fgets(packs,6,fp));
     pclose(fp);
+    free(tmp);
     return pkg;
-  }else if(opendir("/var/lib/rpm") != NULL){
+  }else if((tmp = opendir("/var/lib/rpm")) != NULL){
     pkg[0].manager = "rpm";
     fp = popen("rpm -qa | wc -l","r");
     pkg[0].npacks = atoi(fgets(packs,6,fp));
     pclose(fp);
+    free(tmp);
     return pkg;
+  }else{
+    pkg[0].manager = "Unknown";
+    pkg[0].npacks = 0;
   }
   
 }
@@ -194,6 +201,9 @@ char *getShell(){
 
 char *getDE(){
   char *result = getenv("XDG_CURRENT_DESKTOP");
+  if (result == NULL){
+    return NULL;
+  }
   if(strchr(result,':') != NULL ){
    result = strchr(result,':');
    result++;
@@ -207,6 +217,10 @@ char *getTerm(){
   int x;
   fp = popen ("ps -o comm= -p \"$(($(ps -o ppid= -p \"$(($(ps -o sid= -p \"$$\")))\")))\"", "r");
   fgets(tmp,MAX,fp);
+  if(tmp == NULL){
+    printf("Cannot read Terminal\n");
+    return "Unknown";
+  }
   x = strlen(tmp);
   char *result = malloc(sizeof(char)*x+1);
   strcpy(result,tmp);

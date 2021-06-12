@@ -68,42 +68,33 @@ char *Xnotfound(){
   int w;
   int h;
   char read [1024];
+  FILE *fp;
   Display *display = XOpenDisplay(NULL);
-  if(display == NULL){    
-    FILE *fp = popen("command -v xdpyinfo | wc -l","r");
-    char num[2];
-    fgets(num,2,fp);
-    if(strcmp(num,"0") == 0){
-      pclose(fp);
-      fp = popen("command -v xwininfo | wc -l","r");
-      fgets(num,2,fp);
-      if(strcmp(num,"0") == 0){
-        return "Unkown";
-      }else{
-        pclose(fp);
-        fp = popen("xwininfo -root | grep geometry","r");
-        fgets(read,1024,fp);
-        while(read[i] < 48 || read[i]>57){
-          i++;
-        }
-        while(read[i] != '+'){
-          read[j] = read[i];
-          j++;
-          i++;
-        }
-        read[j] = '\0';
-        char *result = malloc(sizeof(char)*strlen(read)+1);
-        strcpy(result,read);
-        return result;
-      }
-    }else{
-      pclose(fp);
+  if(display == NULL){
+    if(system("xdpyinfo >>/dev/null 2>>/dev/null") == 0 ){
       fp = popen("xdpyinfo | awk /dimensions:/","r");
       fgets(read,1024,fp);
       while(read[i] < 48 || read[i]>57){
         i++;
-    }
+      }
       while(read[i] != ' '){
+        read[j] = read[i];
+        j++;
+        i++;
+       }
+      read[j] = '\0';
+      char *result = malloc(sizeof(char)*strlen(read)+1);
+      strcpy(result,read);
+      pclose(fp);
+      return result;
+    }else if(system("xwininfo -root >>/dev/null 2>>/dev/null") == 0){
+
+      fp = popen("xwininfo -root | grep geometry","r");
+      fgets(read,1024,fp);
+      while(read[i] < 48 || read[i]>57){
+        i++;
+      }
+      while(read[i] != '+'){
         read[j] = read[i];
         j++;
         i++;
@@ -111,71 +102,65 @@ char *Xnotfound(){
       read[j] = '\0';
       char *result = malloc(sizeof(char)*strlen(read)+1);
       strcpy(result,read);
+      pclose(fp);
       return result;
-    } 
-  }
-  Screen *screen = DefaultScreenOfDisplay(display);
+  }  
 
-  w = WidthOfScreen(screen);
-  h = HeightOfScreen(screen);
+  }else{
     
-  char width [17];
-  char height [17];
-  sprintf(width,"%d",w);
-  sprintf(height,"%d",h);
+    Screen *screen = DefaultScreenOfDisplay(display);
 
-  char *result = strcat(width, "x");
-  result = strcat(result,height);
-  XCloseDisplay(display);
+    w = WidthOfScreen(screen);
+    h = HeightOfScreen(screen);
+    
+    char width [17];
+    char height [17];
+    sprintf(width,"%d",w);
+    sprintf(height,"%d",h);
 
-  char *resultcpy = malloc(sizeof(char)*strlen(result)+1);
-  strcpy(resultcpy,result);
-  return resultcpy;
+    char *result = strcat(width, "x");
+    result = strcat(result,height);
+    XCloseDisplay(display);
 
-  
+    char *resultcpy = malloc(sizeof(char)*strlen(result)+1);
+    strcpy(resultcpy,result);
+    return resultcpy;
+  }
 }
 
 char *getDisplay(){
 
   FILE *fp;
   char tmp[200];
-  char num[2];
-  fp = popen("command -v xrandr | wc -l","r");
-  fgets(num,2,fp);
 
-  if(strcmp(num,"0") == 0){
-    pclose(fp);
+
+  if(system("xrandr >>/dev/null 2>>/dev/null") != 0){
     char *result = Xnotfound();
     return result;
+  }
 
-  }else{
-    pclose(fp);
-    if(system("xrandr >>/dev/null 2>>/dev/null") != 0){
-      char *result = Xnotfound();
-      return result;
+  char *line = calloc(sizeof(char),200);
+  char *linecpy;
+  int i = 0;
+  char *result = calloc(sizeof(char),200);
+  fp = popen("xrandr | grep \'*\'","r");
+  while(fgets(tmp,200,fp) != NULL){
+    strcpy(line,tmp);
+    linecpy = line +3;
+    while(linecpy[i] != ' '){
+      i++;
     }
-    char *line = calloc(sizeof(char),200);
-    char *linecpy;
-    int i = 0;
-    char *result = calloc(sizeof(char),200);
-    fp = popen("xrandr | grep \'*\'","r");
-    while(fgets(tmp,200,fp) != NULL){
-      strcpy(line,tmp);
-      linecpy = line +3;
-      while(linecpy[i] != ' '){
-        i++;
-      }
-      linecpy[i] = '\0'; 
-      result = strcat(result,linecpy);
-      result = strcat(result, " ");
-      i = 0;
+    linecpy[i] = '\0'; 
+    result = strcat(result,linecpy);
+    result = strcat(result, " ");
+    i = 0;
     }
   free(line);
   pclose(fp);
   return result;
-  }   
+}   
 
-}
+
 
 
 char *getCpu(){
@@ -206,6 +191,10 @@ char *getCpu(){
 
 char *getGpu(){
   FILE *fp = popen("lspci | grep VGA","r");
+  if(fp == NULL){
+    printf("Cannot read GPU\n");
+    return "Unknown";
+  }
   char read[1024];
   char *tmp;
   int i = 1;
