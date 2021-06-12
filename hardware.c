@@ -191,7 +191,7 @@ char *getCpu(){
     free(token);
   }else{
     printf("Cannot read Cpu\n");
-    return NULL;
+    return "Unknow";
   }
 
   char *tmp = malloc(sizeof(char)*strlen(read)+1);
@@ -209,27 +209,30 @@ char *getGpu(){
   char read[1024];
   char *tmp;
   int i = 1;
-  fgets(read,1024,fp);
-  if((tmp = strchr(read,'[')) == NULL){
-    tmp = strrchr(read,':');
-    tmp++;
-    i = strlen(tmp)+1;
-    char *result = malloc(sizeof(char)*i);
-    strcpy(result,tmp);
-    result[i-2] = '\0';
-    pclose(fp);
-    return result;
-  }
+  char *result;
+  while(fgets(read,1024,fp) != NULL){
+    if((tmp = strchr(read,'[')) == NULL){
+      tmp = strrchr(read,':');
+      tmp++;
+      i = strlen(tmp)+1;
+      result = malloc(sizeof(char)*i);
+      strcpy(result,tmp);
+      result[i-2] = '\0';
+    }else{
   
-  while(tmp[i] != ']'){
-    i++;
-  }
+      while(tmp[i] != ']'){
+        i++;
+      }
   
-  char *result = malloc(sizeof(char)*i+1);
-  strncpy(result,tmp,i);
-  result[i] = '\0';
-  result[0] = ' ';
+      result = malloc(sizeof(char)*i+1);
+      strncpy(result,tmp,i);
+      result[i] = '\0';
+      result[0] = ' ';
+      pclose(fp);
+      return result;
+
+    }
+  }
   pclose(fp);
   return result;
-
 }

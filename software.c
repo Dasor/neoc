@@ -43,7 +43,7 @@ char *getOS(){
 
     }else{
       printf("cannot read OS\n");
-      return NULL;
+      return "Unkown";
     }
 
     line = malloc(sizeof(char)*strlen(read)+1);
@@ -60,7 +60,7 @@ char *getBits(){
   struct utsname *bits = malloc(sizeof(struct utsname));
   if(uname(bits) != 0){
     printf("Cannot read bits\n");
-    return NULL;
+    return "Unkown";
   }
   char *result = malloc(sizeof(char)*strlen(bits->machine)+1);
   strcpy(result,bits->machine);
@@ -73,7 +73,7 @@ char *getHost(){
   char *host = calloc(sizeof(char),HOST_NAME_MAX);  
   if(gethostname(host, HOST_NAME_MAX) != 0){
     printf("Cannot read hostname\n");
-    return NULL;
+    return "Unkown";
   }
   return host;
 
@@ -84,7 +84,7 @@ char *getUser(){
   struct passwd *pws;
   if(( pws = getpwuid(geteuid())) == NULL){
     printf("cannot read user\n");
-    return NULL;
+    return "Unkown";
     }
 
     
@@ -97,7 +97,7 @@ char *getKernel(){
   struct utsname *kernel = malloc(sizeof(struct utsname));
   if(uname(kernel) != 0){
     printf("Cannot read kernel");
-    return NULL;
+    return "Unkownn";
   }
   char *result = malloc(sizeof(char)*strlen(kernel->release)+1);
   strcpy(result,kernel->release);
@@ -163,7 +163,7 @@ char *getShell(){
   char *shell; 
   if((shell = strrchr(getenv("SHELL"),'/')) == NULL){
     printf("Cannot read shell\n");
-    return NULL;
+    return "Unkown";
   }
   shell[0] = ' ';
 

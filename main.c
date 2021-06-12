@@ -53,7 +53,13 @@ int main(){
   printf("OS: %s %s\n",computer.os,computer.bits);
   printf("MotherBoard: %s %s\n",computer.board.chip,computer.board.version);
   printf("Kernel: %s\n",computer.kernel);
-  printf("Uptime : %ld hours, %ld mins\n", (computer.uptime % 86400) / 3600, (computer.uptime % 3600) / 60);
+  if(computer.uptime > 86400){
+    printf("Uptime :%ld days, %ld hours, %ld mins\n",computer.uptime/86400, (computer.uptime % 86400) / 3600, (computer.uptime % 3600) / 60);
+  }else if(computer.uptime > 3600){
+    printf("Uptime :%ld hours, %ld mins\n",(computer.uptime % 86400) / 3600, (computer.uptime % 3600) / 60);
+  }else {
+    printf("Uptime :%ld mins\n",(computer.uptime % 3600) / 60);
+  }
   if(computer.pkg[1].npacks == 0){
     printf("Packages: %d (%s)\n",computer.pkg[0].npacks,computer.pkg[0].manager);
   }else{
