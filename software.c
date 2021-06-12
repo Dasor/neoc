@@ -1,4 +1,6 @@
 #include<string.h>
+#include <sys/types.h>
+#include <dirent.h>
 #include<stdio.h>
 #include<stdlib.h>
 #include "others.h"
@@ -124,59 +126,45 @@ Pack *getPacks(){
 //TO DO: read more pkg managers like slackware and gentoo//
 
   FILE *fp;
-  char num [2];
   char packs[6];
-  Pack *p = malloc(sizeof(Pack)*2);
-  p[1].npacks = 0;
-  
-  fp = popen("command -v pacman | wc -l", "r"); //Arch
-  fgets(num,2,fp);
-  pclose(fp);
-  if(strcmp(num,"0") == 0){
-    fp = popen ("command -v snap | wc -l","r");//debian//
-    fgets(num,2,fp);
-    if(strcmp(num,"0") == 0){
-      fp = popen ("command -v rpm | wc -l ","r");//red hat//
-      fgets(num,2,fp);
-      pclose(fp);
-      if(strcmp(num,"0") == 0){
-        printf("cannot read pkgs\n");
-        pclose(fp);
-        return NULL;
-      }
-      fp = popen ("rpm -qa | wc -l","r");
-      fgets(packs,6,fp);
-      p[0].npacks = atoi(packs);
-      p[0].manager = "rpm";
-      pclose(fp);
-      return p;
+  Pack *pkg = malloc(sizeof(Pack)*2);
+  pkg[1].npacks = 0;
 
-    }
+  if(opendir("/var/cache/pacman") != NULL){
+    pkg[0].manager = "pacman";
+    fp = popen("pacman -Q | wc -l","r");
+    pkg[0].npacks = atoi(fgets(packs,6,fp));
     pclose(fp);
+    return pkg;
+  }else if(opendir("/var/lib/snapd/snaps") != NULL){
+    pkg[0].manager = "snap";
+    pkg[1].manager = "apt";
     fp = popen("find /var/snap/ -maxdepth 1 | wc -l","r");
-    fgets(packs,6,fp);
-    p[0].npacks = atoi(packs);
-    p[0].npacks--;
-    fp = popen ("apt-cache pkgnames | wc -l","r");
-    fgets(packs,6,fp);
-    p[1].npacks = atoi(packs);
-    p[0].manager = "snap";
-    p[1].manager = "apt";
+    pkg[0].npacks = atoi(fgets(packs,6,fp));
+    pkg[0].npacks--;
     pclose(fp);
-    return p;
-  }
 
-  fp = popen("pacman -Q | wc -l","r");
-  fgets(packs,6,fp);
-  p[0].npacks = atoi(packs);
-  p[0].manager = "pacman";
-  pclose(fp);
-  return p;
+    fp = popen("apt-cache pkgnames | wc -l","r"); 
+    pkg[1].npacks = atoi(fgets(packs,6,fp));
+    pclose(fp);
+    return pkg;
+  }else if(opendir("/var/lib/rpm") != NULL){
+    pkg[0].manager = "rpm";
+    fp = popen("rpm -qa | wc -l","r");
+    pkg[0].npacks = atoi(fgets(packs,6,fp));
+    pclose(fp);
+    return pkg;
+  }
+  
 }
 
 char *getShell(){
 
-  char *shell = strrchr(getenv("SHELL"),'/');
+  char *shell; 
+  if((shell = strrchr(getenv("SHELL"),'/')) == NULL){
+    printf("Cannot read shell\n");
+    return NULL;
+  }
   shell[0] = ' ';
 
   if(strcmp(shell," bash") == 0 || strcmp(shell," rbash") == 0){//get bash version
