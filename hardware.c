@@ -21,46 +21,39 @@ Board getBoard(){
  #ifdef __linux__
   
     FILE *fpointer = fopen ("/sys/devices/virtual/dmi/id/board_name","r");
-    char *chip = calloc(sizeof(char),256); /* or other suitable maximum line size */
     Board result;
+    result.chip = calloc(sizeof(char),256); /* or other suitable maximum line size */
 
     if ( fpointer != NULL ){
-      fgets(chip, 256 , fpointer);
+      fgets(result.chip, 256 , fpointer);
     }else{
       printf("cannot read Board");
-      result.chip , result.version = NULL;
+      result.chip = NULL; 
+      result.version = NULL;
       return result;
     }
 
 
-    chip[strlen(chip)-1] = '\0'; //deletes \n //
+    result.chip[strlen(result.chip)-1] = '\0'; //deletes \n //
 
-    result.chip = malloc(sizeof(char)*strlen(chip)+1);
-    strcpy(result.chip,chip);
-    free(chip);
     fclose(fpointer);
 
-    FILE *fpointer2 = fopen ("/sys/devices/virtual/dmi/id/board_version","r");
-    char *version = calloc(sizeof(char),4); //I suppose there can´t be a bigger version that x.x// 
+    fpointer = fopen ("/sys/devices/virtual/dmi/id/board_version","r");
+    result.version = calloc(sizeof(char),4); //I suppose there can´t be a bigger version that x.x// 
     
-    if (fpointer2 != NULL ){
-      fgets(version, 4 , fpointer2);
+    if (fpointer != NULL ){
+      fgets(result.version, 4 , fpointer);
     }else{
-      result.chip , result.version = NULL;
+      result.chip = NULL; 
+      result.version = NULL;
       printf("cannot read Board");
       return result;
     }
 
-    if(strcmp(version, "x.x")== 0){
-      result.version = malloc(sizeof(char));
-      strcpy(result.version,"\0");
-    }else{
-      result.version = malloc(sizeof(char)*strlen(version)+1);
-      strcpy(result.version,version);
-    }
-  
-    free(version);
-    fclose(fpointer2);
+    if(strcmp(result.version, "x.x")== 0){
+      result.version[0] = '\0';
+    }  
+    fclose(fpointer);
    
   #endif
 
