@@ -193,7 +193,12 @@ char *getShell(){
 }
 
 char *getDE(){
-  return getenv("XDG_CURRENT_DESKTOP");
+  char *result = getenv("XDG_CURRENT_DESKTOP");
+  if(strchr(result,':') != NULL ){
+   result = strchr(result,':');
+   result++;
+  }
+  return result;
 }
 
 char *getTerm(){
