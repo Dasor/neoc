@@ -1,4 +1,5 @@
 #include<string.h>
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <dirent.h>
 #include<stdio.h>
@@ -129,16 +130,15 @@ Pack *getPacks(){
   char packs[6];
   Pack *pkg = malloc(sizeof(Pack)*2);
   pkg[1].npacks = 0;
-  DIR *tmp; //just to free opendir()
+  struct stat stats;
 
-  if((tmp = opendir("/var/cache/pacman")) != NULL){
+  if(stat("/var/cache/pacman",&stats) == 0 && S_ISDIR(stats.st_mode) == 1){
     pkg[0].manager = "pacman";
     fp = popen("pacman -Q | wc -l","r");
     pkg[0].npacks = atoi(fgets(packs,6,fp));
     pclose(fp);
-    free(tmp);
     return pkg;
-  }else if((tmp = opendir("/var/lib/snapd/snaps")) != NULL){
+  }else if(stat("/var/lib/snapd/snaps",&stats) == 0 && S_ISDIR(stats.st_mode) == 1){ 
     pkg[0].manager = "snap";
     pkg[1].manager = "apt";
     fp = popen("find /var/snap/ -maxdepth 1 | wc -l","r");
@@ -149,18 +149,17 @@ Pack *getPacks(){
     fp = popen("apt-cache pkgnames | wc -l","r"); 
     pkg[1].npacks = atoi(fgets(packs,6,fp));
     pclose(fp);
-    free(tmp);
     return pkg;
-  }else if((tmp = opendir("/var/lib/rpm")) != NULL){
+  }else if(stat("/var/lib/rpm",&stats) == 0 || S_ISDIR(stats.st_mode) == 1){
     pkg[0].manager = "rpm";
     fp = popen("rpm -qa | wc -l","r");
     pkg[0].npacks = atoi(fgets(packs,6,fp));
     pclose(fp);
-    free(tmp);
     return pkg;
   }else{
     pkg[0].manager = "Unknown";
     pkg[0].npacks = 0;
+    return pkg;
   }
   
 }
