@@ -5,6 +5,7 @@
 #include<stdlib.h>
 #include <unistd.h>
 #include <limits.h>
+#include "others.h"
 
 struct BoardRep{
   
@@ -63,45 +64,24 @@ Board getBoard(){
 
 char *Xnotfound(){
   
-  int i = 0;
-  int j = 0;
   int w;
   int h;
   char read [1024];
+  char *result;
   FILE *fp;
   Display *display = XOpenDisplay(NULL);
   if(display == NULL){
     if(system("xdpyinfo >>/dev/null 2>>/dev/null") == 0 ){
       fp = popen("xdpyinfo | awk /dimensions:/","r");
       fgets(read,1024,fp);
-      while(read[i] < 48 || read[i]>57){
-        i++;
-      }
-      while(read[i] != ' '){
-        read[j] = read[i];
-        j++;
-        i++;
-       }
-      read[j] = '\0';
-      char *result = malloc(sizeof(char)*strlen(read)+1);
-      strcpy(result,read);
+      result = numUntilchar(read,' ');
       pclose(fp);
       return result;
     }else if(system("xwininfo -root >>/dev/null 2>>/dev/null") == 0){
 
       fp = popen("xwininfo -root | grep geometry","r");
       fgets(read,1024,fp);
-      while(read[i] < 48 || read[i]>57){
-        i++;
-      }
-      while(read[i] != '+'){
-        read[j] = read[i];
-        j++;
-        i++;
-      }
-      read[j] = '\0';
-      char *result = malloc(sizeof(char)*strlen(read)+1);
-      strcpy(result,read);
+      result = numUntilchar(read,'+');
       pclose(fp);
       return result;
   }  
@@ -209,16 +189,9 @@ char *getGpu(){
       result[i-2] = '\0';
     }else{
   
-      while(tmp[i] != ']'){
-        i++;
-      }
-  
-      result = malloc(sizeof(char)*i+1);
-      strncpy(result,tmp,i);
-      result[i] = '\0';
-      result[0] = ' ';
-      pclose(fp);
-      return result;
+    result = fixString(tmp,'[',']',1);
+    pclose(fp);
+    return result;
 
     }
   }

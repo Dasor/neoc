@@ -49,10 +49,10 @@ char *getOS(){
 
     line = malloc(sizeof(char)*strlen(read)+1);
     strcpy(line,read);
-    tmp = fixString(line);
-    result= malloc(sizeof(char)*strlen(tmp)+1);
+    tmp = fixString(line,'"','"',0);
+    result = malloc(sizeof(char)*strlen(tmp)+1);
     strcpy(result,tmp);
-    free(line); // we free both line and tmp since tmp points ahead of line but on the same memory//
+    free(tmp);
     return result;
 }
 
@@ -175,23 +175,15 @@ char *getShell(){
 
   if(strcmp(shell," bash") == 0 || strcmp(shell," rbash") == 0){//get bash version
     FILE *fp;
-    int i = 0;
-    int j = 0;
     char tmp[35];
+    char *version;
     fp = popen ("bash --version","r");
     fgets(tmp,35,fp);
-    while(tmp[i] <48 || tmp[i]>57){
-      i++;
-    }
-    while(tmp[i] != '('){
-      tmp[j] = tmp[i];
-      j++;
-      i++;
-    }
-    tmp[j] = '\0';
+    version = numUntilchar(tmp,'(');
     shell = strcat(shell, " ");
-    shell = strcat(shell,tmp);
+    shell = strcat(shell,version);
     pclose(fp);
+    free(version);
     return shell;
   }
 

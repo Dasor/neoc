@@ -72,7 +72,7 @@ int main(){
   }
   printf("Terminal: %s\n",computer.term);
   printf("CPU%s",computer.cpu);
-  printf("GPU:%s\n",computer.gpu);
+  printf("GPU: %s\n",computer.gpu);
 
   free(computer.gpu);
   free(computer.cpu);
