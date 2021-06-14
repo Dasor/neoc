@@ -16,5 +16,6 @@ char *getDisplay();
 char *Xnotfound();
 char *getCpu();
 char *getGpu();
+char *getMemory();
 
 #endif

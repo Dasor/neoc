@@ -84,6 +84,8 @@ char *Xnotfound(){
       result = numUntilchar(read,'+');
       pclose(fp);
       return result;
+  }else{
+    return NULL;
   }  
 
   }else{
@@ -156,7 +158,7 @@ char *getCpu(){
     free(token);
   }else{
     printf("Cannot read Cpu\n");
-    return "Unknow";
+    return "NULL";
   }
 
   char *tmp = malloc(sizeof(char)*strlen(read)+1);
@@ -173,7 +175,7 @@ char *getGpu(){
   FILE *fp = popen("lspci | grep VGA","r");
   if(fp == NULL){
     printf("Cannot read GPU\n");
-    return "Unknown";
+    return "NULL";
   }
   char read[1024];
   char *tmp;
@@ -182,7 +184,7 @@ char *getGpu(){
   while(fgets(read,1024,fp) != NULL){
     if((tmp = strchr(read,'[')) == NULL){
       tmp = strrchr(read,':');
-      tmp++;
+      tmp = tmp + 2;
       i = strlen(tmp)+1;
       result = malloc(sizeof(char)*i);
       strcpy(result,tmp);
@@ -198,3 +200,45 @@ char *getGpu(){
   pclose(fp);
   return result;
 }
+
+char *getMemory(){
+    int total_memory, used_memory;
+    int total, shared, memfree, buffers, cached, reclaimable;
+
+    FILE *meminfo = fopen("/proc/meminfo", "r"); /* get infomation from meminfo */
+    if(meminfo == NULL) {
+      return NULL;
+    }
+
+    /* We parse through all lines of meminfo and scan for the information we need */
+    char *line = NULL; // allocation handled automatically by getline()
+    size_t len; /* unused */
+
+    /* parse until EOF */
+    while (getline(&line, &len, meminfo) != -1) {
+        /* if sscanf doesn't find a match, pointer is untouched */
+        sscanf(line, "MemTotal: %d", &total);
+        sscanf(line, "Shmem: %d", &shared);
+        sscanf(line, "MemFree: %d", &memfree);
+        sscanf(line, "Buffers: %d", &buffers);
+        sscanf(line, "Cached: %d", &cached);
+        sscanf(line, "SReclaimable: %d", &reclaimable);
+    }
+
+    free(line);
+
+    fclose(meminfo);
+
+    /* use same calculation as neofetch */
+    used_memory = (total + shared - memfree - buffers - cached - reclaimable) / 1024;
+    total_memory = total / 1024;
+    int percentage = (int) (100 * (used_memory / (double) total_memory));
+
+    char *memory = malloc(150);
+    snprintf(memory, 150, "%dMiB / %dMiB (%d%%)", used_memory, total_memory, percentage);
+
+    return memory;
+
+}
+
+

@@ -10,6 +10,7 @@
 #include <sys/utsname.h>
 #include <sys/sysinfo.h>
 #include <pwd.h>
+#include <math.h>
 #define MAX 1024
 
 #ifdef __linux__
@@ -44,7 +45,7 @@ char *getOS(){
 
     }else{
       printf("cannot read OS\n");
-      return "Unkown";
+      return NULL;
     }
 
     line = malloc(sizeof(char)*strlen(read)+1);
@@ -61,7 +62,7 @@ char *getBits(){
   struct utsname *bits = malloc(sizeof(struct utsname));
   if(uname(bits) != 0){
     printf("Cannot read bits\n");
-    return "Unkown";
+    return NULL;
   }
   char *result = malloc(sizeof(char)*strlen(bits->machine)+1);
   strcpy(result,bits->machine);
@@ -74,7 +75,7 @@ char *getHost(){
   char *host = calloc(sizeof(char),HOST_NAME_MAX);  
   if(gethostname(host, HOST_NAME_MAX) != 0){
     printf("Cannot read hostname\n");
-    return "Unkown";
+    return NULL;
   }
   return host;
 
@@ -85,7 +86,7 @@ char *getUser(){
   struct passwd *pws;
   if(( pws = getpwuid(geteuid())) == NULL){
     printf("cannot read user\n");
-    return "Unkown";
+    return NULL;
     }
 
     
@@ -98,7 +99,7 @@ char *getKernel(){
   struct utsname *kernel = malloc(sizeof(struct utsname));
   if(uname(kernel) != 0){
     printf("Cannot read kernel");
-    return "Unkownn";
+    return NULL;
   }
   char *result = malloc(sizeof(char)*strlen(kernel->release)+1);
   strcpy(result,kernel->release);
@@ -169,7 +170,7 @@ char *getShell(){
   char *shell; 
   if((shell = strrchr(getenv("SHELL"),'/')) == NULL){
     printf("Cannot read shell\n");
-    return "Unkown";
+    return NULL;
   }
   shell[0] = ' ';
 
@@ -223,3 +224,5 @@ char *getTerm(){
   pclose(fp);
   return result;
 }
+
+
