@@ -62,34 +62,15 @@ Board getBoard(){
     
 }
 
-char *Xnotfound(){
-  
+char *getDisplay(){
+
   int w;
   int h;
-  char read [1024];
-  char *result;
-  FILE *fp;
   Display *display = XOpenDisplay(NULL);
   if(display == NULL){
-    if(system("xdpyinfo >>/dev/null 2>>/dev/null") == 0 ){
-      fp = popen("xdpyinfo | awk /dimensions:/","r");
-      fgets(read,1024,fp);
-      result = numUntilchar(read,' ');
-      pclose(fp);
-      return result;
-    }else if(system("xwininfo -root >>/dev/null 2>>/dev/null") == 0){
-
-      fp = popen("xwininfo -root | grep geometry","r");
-      fgets(read,1024,fp);
-      result = numUntilchar(read,'+');
-      pclose(fp);
-      return result;
-  }else{
     return NULL;
-  }  
+  }
 
-  }else{
-    
     Screen *screen = DefaultScreenOfDisplay(display);
 
     w = WidthOfScreen(screen);
@@ -107,39 +88,6 @@ char *Xnotfound(){
     char *resultcpy = malloc(sizeof(char)*strlen(result)+1);
     strcpy(resultcpy,result);
     return resultcpy;
-  }
-}
-
-char *getDisplay(){
-
-  FILE *fp;
-  char tmp[200];
-
-
-  if(system("xrandr >>/dev/null 2>>/dev/null") != 0){
-    char *result = Xnotfound();
-    return result;
-  }
-
-  char *line = calloc(sizeof(char),200);
-  char *linecpy;
-  int i = 0;
-  char *result = calloc(sizeof(char),200);
-  fp = popen("xrandr | grep \'*\'","r");
-  while(fgets(tmp,200,fp) != NULL){
-    strcpy(line,tmp);
-    linecpy = line +3;
-    while(linecpy[i] != ' '){
-      i++;
-    }
-    linecpy[i] = '\0'; 
-    result = strcat(result,linecpy);
-    result = strcat(result, " ");
-    i = 0;
-    }
-  free(line);
-  pclose(fp);
-  return result;
 }   
 
 

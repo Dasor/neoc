@@ -132,12 +132,19 @@ Pack *getPacks(){
   Pack *pkg = malloc(sizeof(Pack)*2);
   pkg[1].npacks = 0;
   struct stat stats;
+  int i =0;
 
   if(stat("/var/cache/pacman",&stats) == 0 && S_ISDIR(stats.st_mode) == 1){
     pkg[0].manager = "pacman";
-    fp = popen("pacman -Q | wc -l","r");
-    pkg[0].npacks = atoi(fgets(packs,6,fp));
-    pclose(fp);
+    struct dirent *ep;
+    DIR *dp = opendir("/var/lib/pacman/local");
+    if( dp != NULL){
+      while((ep = readdir(dp)) != NULL){
+        i++;
+      }
+    closedir(dp);
+    }
+    pkg[0].npacks = i-3;
     return pkg;
   }else if(stat("/var/lib/snapd/snaps",&stats) == 0 && S_ISDIR(stats.st_mode) == 1){ 
     pkg[0].manager = "snap";
