@@ -34,6 +34,7 @@ typedef struct PcRep Pc;
 
 int main(){
   Pc computer;
+  int *npkg = malloc(sizeof(int));
   computer.os = getOS();
   computer.bits = getBits();
   computer.name = getHost();
@@ -41,7 +42,7 @@ int main(){
   computer.board = getBoard();
   computer.kernel = getKernel();
   computer.uptime = getUptime();
-  computer.pkg = getPacks();
+  computer.pkg = getPacks(npkg);
   computer.shell = getShell();
   computer.display = getDisplay();
   computer.DE = getDE();
@@ -50,6 +51,7 @@ int main(){
   computer.gpu = getGpu();
   computer.memory = getMemory();
 
+
   char *bars;
   if(computer.user != NULL && computer.name != NULL){
     printf("%s@%s\n",computer.user,computer.name);
@@ -57,7 +59,7 @@ int main(){
     bars = fillString('-',n);
   }else if(computer.user == NULL && computer.name == NULL){
     printf("Unkown@Unkown\n");
-    int n =15;
+    int n = 15;
     bars = fillString('-',n);
   }else if(computer.user == NULL){
     printf("Unkown@%s\n",computer.name);
@@ -99,12 +101,16 @@ int main(){
     printf("Uptime : %ld mins\n",(computer.uptime % 3600) / 60);
   }
 
-  if(computer.pkg[1].npacks == 0){
-    printf("Packages: %d (%s)\n",computer.pkg[0].npacks,computer.pkg[0].manager);
-  }else{
-    printf("Packages: %d (%s), %d (%s)\n",computer.pkg[0].npacks,computer.pkg[0].manager,computer.pkg[1].npacks,computer.pkg[1].manager);
+  printf("Packages: ");
+  for(int i = 0; i < *npkg ; i++){
+    if(i+1 == *npkg){
+      printf("%d (%s)",computer.pkg[i].npacks,computer.pkg[i].manager);
+    }else{
+      printf("%d (%s),",computer.pkg[i].npacks,computer.pkg[i].manager);
+    }
   }
-
+  printf("\n");
+  
   if(computer.shell != NULL){
     printf("Shell:%s\n",computer.shell);
   }else{
@@ -145,6 +151,7 @@ int main(){
     printf("Memory: Unkown\n");
   }
 
+  free(npkg);
   free(computer.memory);
   free(computer.gpu);
   free(computer.cpu);

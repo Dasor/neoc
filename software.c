@@ -123,19 +123,19 @@ long getUptime(){
 
 }
 
-Pack *getPacks(){
+Pack *getPacks(int *n){
 
 //TO DO: read more pkg managers like slackware and gentoo//
 
   FILE *fp;
   char packs[6];
-  Pack *pkg = malloc(sizeof(Pack)*2);
-  pkg[1].npacks = 0;
+  Pack *pkg = malloc(sizeof(Pack)*4);
   struct stat stats;
-  int i =0;
+  int i = 0;
+  int j = 0;
 
   if(stat("/var/cache/pacman",&stats) == 0 && S_ISDIR(stats.st_mode) == 1){
-    pkg[0].manager = "pacman";
+    pkg[j].manager = "pacman";
     struct dirent *ep;
     DIR *dp = opendir("/var/lib/pacman/local");
     if( dp != NULL){
@@ -144,31 +144,35 @@ Pack *getPacks(){
       }
     closedir(dp);
     }
-    pkg[0].npacks = i-3;
-    return pkg;
+    pkg[j].npacks = i-3;
+    j++;
   }else if(stat("/var/lib/snapd/snaps",&stats) == 0 && S_ISDIR(stats.st_mode) == 1){ 
-    pkg[0].manager = "snap";
-    pkg[1].manager = "apt";
+    pkg[j].manager = "snap";
     fp = popen("find /var/snap/ -maxdepth 1 | wc -l","r");
-    pkg[0].npacks = atoi(fgets(packs,6,fp));
-    pkg[0].npacks--;
+    pkg[j].npacks = atoi(fgets(packs,6,fp));
+    pkg[j].npacks--;
     pclose(fp);
-
+    j++;
+  }else if(stat("/var/cache/apt",&stats) == 0 && S_ISDIR(stats.st_mode) == 1){ 
     fp = popen("apt-cache pkgnames | wc -l","r"); 
-    pkg[1].npacks = atoi(fgets(packs,6,fp));
+    pkg[j].npacks = atoi(fgets(packs,6,fp));
+    pkg[j].manager = "apt";
     pclose(fp);
-    return pkg;
+    j++;
   }else if(stat("/var/lib/rpm",&stats) == 0 || S_ISDIR(stats.st_mode) == 1){
-    pkg[0].manager = "rpm";
+    pkg[j].manager = "rpm";
     fp = popen("rpm -qa | wc -l","r");
-    pkg[0].npacks = atoi(fgets(packs,6,fp));
+    pkg[j].npacks = atoi(fgets(packs,6,fp));
     pclose(fp);
-    return pkg;
-  }else{
-    pkg[0].manager = "Unknown";
-    pkg[0].npacks = 0;
-    return pkg;
+    j++;
+  }else if(pkg[0].npacks == 0){
+    pkg[j].manager = "Unknown";
+    pkg[j].npacks = 0;
   }
+
+  *n = j;
+
+  return pkg;
   
 }
 
