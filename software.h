@@ -17,7 +17,7 @@ char *getHost();
 char *getUser();
 char *getKernel();
 long getUptime();
-Pack *getPacks(int *n);
+char *getPacks();
 char *getShell();
 char *getDE();
 char *getTerm();

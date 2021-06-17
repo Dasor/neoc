@@ -19,7 +19,7 @@ struct PcRep{
   Board board;
   char *kernel;
   long uptime;
-  Pack *pkg;
+  char *pkg;
   char *shell;
   char *display;
   char *DE;
@@ -33,8 +33,9 @@ struct PcRep{
 typedef struct PcRep Pc;
 
 int main(){
+  char info[15][100];
+
   Pc computer;
-  int *npkg = malloc(sizeof(int));
   computer.os = getOS();
   computer.bits = getBits();
   computer.name = getHost();
@@ -42,7 +43,7 @@ int main(){
   computer.board = getBoard();
   computer.kernel = getKernel();
   computer.uptime = getUptime();
-  computer.pkg = getPacks(npkg);
+  computer.pkg = getPacks();
   computer.shell = getShell();
   computer.display = getDisplay();
   computer.DE = getDE();
@@ -54,104 +55,99 @@ int main(){
 
   char *bars;
   if(computer.user != NULL && computer.name != NULL){
-    printf("%s@%s\n",computer.user,computer.name);
+    sprintf(info[0],"%s@%s\n",computer.user,computer.name);
     int n = strlen(computer.user)+strlen(computer.name)+2;
     bars = fillString('-',n);
   }else if(computer.user == NULL && computer.name == NULL){
-    printf("Unkown@Unkown\n");
+    sprintf(info[0],"Unkown@Unkown\n");
     int n = 15;
     bars = fillString('-',n);
   }else if(computer.user == NULL){
-    printf("Unkown@%s\n",computer.name);
+    sprintf(info[0],"Unkown@%s\n",computer.name);
     int n = strlen(computer.user)+8;
     bars = fillString('-',n);
   }else if(computer.name == NULL){
-    printf("%s@Unkown\n",computer.user);
+    sprintf(info[0],"%s@Unkown\n",computer.user);
     int n = 8+strlen(computer.name);
     bars = fillString('-',n); 
   }
 
-  printf("%s\n",bars);
+  sprintf(info[1],"%s\n",bars);
 
   if(computer.os != NULL){
-    printf("OS: %s %s\n",computer.os,computer.bits);
+    sprintf(info[2],"OS: %s %s\n",computer.os,computer.bits);
   }else{
-    printf("OS: Unkown\n");
+    sprintf(info[2],"OS: Unkown\n");
   }
 
   if(computer.board.chip != NULL && computer.board.version != NULL){
-    printf("MotherBoard: %s %s\n",computer.board.chip,computer.board.version);
+    sprintf(info[3],"MotherBoard: %s %s\n",computer.board.chip,computer.board.version);
   }else{
-    printf("MotherBoard: Unkown\n");
+    sprintf(info[3],"MotherBoard: Unkown\n");
   }
 
   if(computer.kernel != NULL){
-    printf("Kernel: %s\n",computer.kernel);
+    sprintf(info[4],"Kernel: %s\n",computer.kernel);
   }else{
-    printf("Kernel: Unkown\n");
+    sprintf(info[4],"Kernel: Unkown\n");
   }
 
   if(computer.uptime > 86400){
-    printf("Uptime : %ld days, %ld hours, %ld mins\n",computer.uptime/86400, (computer.uptime % 86400) / 3600, (computer.uptime % 3600) / 60);
+    sprintf(info[5],"Uptime : %ld days, %ld hours, %ld mins\n",computer.uptime/86400, (computer.uptime % 86400) / 3600, (computer.uptime % 3600) / 60);
   }else if(computer.uptime > 3600){
-    printf("Uptime : %ld hours, %ld mins\n",(computer.uptime % 86400) / 3600, (computer.uptime % 3600) / 60);
+    sprintf(info[5],"Uptime : %ld hours, %ld mins\n",(computer.uptime % 86400) / 3600, (computer.uptime % 3600) / 60);
   }else if(computer.uptime == -1){
-    printf("Uptime: Unkown\n");
+    sprintf(info[5],"Uptime: Unkown\n");
   }else{
-    printf("Uptime : %ld mins\n",(computer.uptime % 3600) / 60);
+    sprintf(info[5],"Uptime : %ld mins\n",(computer.uptime % 3600) / 60);
   }
 
-  printf("Packages: ");
-  for(int i = 0; i < *npkg ; i++){
-    if(i+1 == *npkg){
-      printf("%d (%s)",computer.pkg[i].npacks,computer.pkg[i].manager);
-    }else{
-      printf("%d (%s),",computer.pkg[i].npacks,computer.pkg[i].manager);
-    }
-  }
-  printf("\n");
-  
+  sprintf(info[6],"Packages: %s\n",computer.pkg); 
+
   if(computer.shell != NULL){
-    printf("Shell:%s\n",computer.shell);
+    sprintf(info[7],"Shell:%s\n",computer.shell);
   }else{
-    printf("Shell: Unkown\n");
+    sprintf(info[7],"Shell: Unkown\n");
   }
 
   if(computer.display != NULL){
-    printf("Resolution: %s\n",computer.display);
+    sprintf(info[8],"Resolution: %s\n",computer.display);
   }else{
-    printf("Resolution: Unkown\n");
+    sprintf(info[8],"Resolution: Unkown\n");
   }
 
   if(computer.DE != NULL){
-    printf("DE: %s\n",computer.DE);
+    sprintf(info[9],"DE: %s\n",computer.DE);
   }
 
   if(computer.term != NULL){
-    printf("Terminal: %s\n",computer.term);
+    sprintf(info[10],"Terminal: %s\n",computer.term);
   }else{
-    printf("Terminal: Unkown\n");
+    sprintf(info[10],"Terminal: Unkown\n");
   }
 
   if(computer.cpu != NULL){
-    printf("CPU%s",computer.cpu);
+    sprintf(info[11],"CPU%s",computer.cpu);
   }else{
-    printf("CPU: Unkown\n");
+    sprintf(info[11],"CPU: Unkown\n");
   }
 
   if(computer.gpu != NULL){
-    printf("GPU: %s\n",computer.gpu);
+    sprintf(info[12],"GPU: %s\n",computer.gpu);
   }else{
-    printf("GPU: Unkown\n");
+    sprintf(info[12],"GPU: Unkown\n");
   }
   
   if(computer.memory != NULL){
-    printf("Memory: %s\n",computer.memory);
+    sprintf(info[13],"Memory: %s\n",computer.memory);
   }else{
-    printf("Memory: Unkown\n");
+    sprintf(info[13],"Memory: Unkown\n");
   }
 
-  free(npkg);
+  for(int i = 0; i<13;i++){
+    printf("%s",info[i]);
+  }
+
   free(computer.memory);
   free(computer.gpu);
   free(computer.cpu);

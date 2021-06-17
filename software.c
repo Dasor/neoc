@@ -123,7 +123,7 @@ long getUptime(){
 
 }
 
-Pack *getPacks(int *n){
+char *getPacks(){
 
 //TO DO: read more pkg managers like slackware and gentoo//
 
@@ -168,11 +168,31 @@ Pack *getPacks(int *n){
   }else if(pkg[0].npacks == 0){
     pkg[j].manager = "Unknown";
     pkg[j].npacks = 0;
+    j++;
   }
 
-  *n = j;
-
-  return pkg;
+  char *result = calloc(sizeof(char),1024);
+  char np [6];
+  for(int a = 0; a<j ; a++){
+    if(a+1 == j){
+      sprintf(np,"%d",pkg[a].npacks);
+      result = strcat(result,np);
+      result = strcat(result , " ");
+      result = strcat(result,"(");
+      result = strcat(result,pkg[a].manager);
+      result = strcat(result,")");
+    }else{
+      sprintf(np,"%d",pkg[a].npacks);
+      result = strcat(result,np);
+      result = strcat(result , " ");
+      result = strcat(result,"(");
+      result = strcat(result,pkg[a].manager);
+      result = strcat(result,"),");
+    }
+  }
+  
+  free(pkg);
+  return result;
   
 }
 
