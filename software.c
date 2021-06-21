@@ -5,6 +5,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include "others.h"
+#include "ascii.h"
 #include <unistd.h>
 #include <limits.h>
 #include <sys/utsname.h>
@@ -25,6 +26,15 @@ char *manager;
 
 typedef struct PackagesRep Pack;
 
+struct LogoRep {
+
+  int width;
+  int height;
+  char *logo;
+
+};
+
+typedef struct LogoRep Logo;
 
 char *getOS(){
   
@@ -256,4 +266,24 @@ char *getTerm(){
   return result;
 }
 
+Logo *getLogo(char *string){
 
+  Logo *logo = malloc(sizeof(Logo));
+  
+  if(strstr(string,"Arch") != NULL){
+    logo->width = 44;
+    logo->height = 19;
+    logo->logo = ARCH_ASCII;
+  }else if(strstr(string,"Debian") != NULL){
+    logo->width = 32;
+    logo-> height = 18;
+    logo->logo = DEBIAN_ASCII;
+  }else{
+    logo->width = 62;
+    logo-> height = 19;
+    logo->logo = UNKNOWN_ASCII;
+  }
+
+  return logo;
+
+}

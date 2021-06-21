@@ -2,14 +2,15 @@
 #define OS_H
 
 
-struct PackagesRep {
+struct LogoRep {
 
-int npacks;
-char *manager;
+  int width;
+  int height;
+  char *logo;
 
 };
 
-typedef struct PackagesRep Pack;
+typedef struct LogoRep Logo;
 
 char *getOS();
 char *getBits();
@@ -21,5 +22,6 @@ char *getPacks();
 char *getShell();
 char *getDE();
 char *getTerm();
+Logo *getLogo(char *string);
 
 #endif

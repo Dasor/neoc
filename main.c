@@ -27,6 +27,7 @@ struct PcRep{
   char *cpu;
   char *gpu;
   char *memory;
+  Logo *logo;
 
 };
 
@@ -51,8 +52,8 @@ int main(){
   computer.cpu = getCpu();
   computer.gpu = getGpu();
   computer.memory = getMemory();
-
-
+  computer.logo = getLogo(computer.os);
+  int x = 0;
   char *bars;
   if(computer.user != NULL && computer.name != NULL){
     sprintf(info[0],"%s@%s\n",computer.user,computer.name);
@@ -144,10 +145,25 @@ int main(){
     sprintf(info[13],"Memory: Unkown\n");
   }
 
-  for(int i = 0; i<13;i++){
-    printf("%s",info[i]);
+ /*for(int y = 1; y<=19; y++){
+    for(; x<62*y ;x++){
+      printf("%c",AMD_ASCII[x]);
+    }
+    printf("\n");
+  }*/
+  
+  for(int i = 0; i<computer.logo->height;i++){
+    for(; x<computer.logo->width*(i+1);x++){
+      printf("%c", computer.logo->logo[x]);
+    }
+    if(i<13){
+      printf("%s",info[i]);
+    }else{
+      printf("\n");
+    }
   }
 
+  free(computer.logo);
   free(computer.memory);
   free(computer.gpu);
   free(computer.cpu);
