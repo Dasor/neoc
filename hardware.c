@@ -51,7 +51,7 @@ Board getBoard(){
       return result;
     }
 
-    if(strcmp(result.version, "x.x")== 0){
+    if(strcmp(result.version, "x.x") == 0 || strcmp(result.version,"\n") == 0){
       result.version[0] = '\0';
     }  
     fclose(fpointer);
@@ -120,11 +120,8 @@ char *getCpu(){
 }
 
 char *getGpu(){
+  if(system("lspci >>/dev/null 2>>/dev/null") != -1){
   FILE *fp = popen("lspci | grep VGA","r");
-  if(fp == NULL){
-    printf("Cannot read GPU\n");
-    return "NULL";
-  }
   char read[1024];
   char *tmp;
   int i = 1;
@@ -147,6 +144,9 @@ char *getGpu(){
   }
   pclose(fp);
   return result;
+  }else{
+    return NULL;
+  }
 }
 
 char *getMemory(){

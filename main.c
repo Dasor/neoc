@@ -54,111 +54,108 @@ int main(){
   computer.memory = getMemory();
   computer.logo = getLogo("Debian");
   int x = 0;
+  int j = 0;
   char *bars;
   if(computer.user != NULL && computer.name != NULL){
     sprintf(info[0],"%s@%s\n",computer.user,computer.name);
     int n = strlen(computer.user)+strlen(computer.name)+2;
     bars = fillString('-',n);
+    j++;
   }else if(computer.user == NULL && computer.name == NULL){
     sprintf(info[0],"Unkown@Unkown\n");
     int n = 15;
     bars = fillString('-',n);
+    j++;
   }else if(computer.user == NULL){
     sprintf(info[0],"Unkown@%s\n",computer.name);
     int n = strlen(computer.user)+8;
     bars = fillString('-',n);
+    j++;
   }else if(computer.name == NULL){
     sprintf(info[0],"%s@Unkown\n",computer.user);
     int n = 8+strlen(computer.name);
     bars = fillString('-',n); 
+    j++;
   }
 
   sprintf(info[1],"%s\n",bars);
+  j++;
 
   if(computer.os != NULL){
     sprintf(info[2],"OS: %s %s\n",computer.os,computer.bits);
-  }else{
-    sprintf(info[2],"OS: Unkown\n");
+    j++;
   }
 
   if(computer.board.chip != NULL && computer.board.version != NULL){
     sprintf(info[3],"MotherBoard: %s %s\n",computer.board.chip,computer.board.version);
-  }else{
-    sprintf(info[3],"MotherBoard: Unkown\n");
+    j++;
   }
 
   if(computer.kernel != NULL){
     sprintf(info[4],"Kernel: %s\n",computer.kernel);
-  }else{
-    sprintf(info[4],"Kernel: Unkown\n");
+    j++;
   }
 
   if(computer.uptime > 86400){
     sprintf(info[5],"Uptime : %ld days, %ld hours, %ld mins\n",computer.uptime/86400, (computer.uptime % 86400) / 3600, (computer.uptime % 3600) / 60);
+    j++;
   }else if(computer.uptime > 3600){
     sprintf(info[5],"Uptime : %ld hours, %ld mins\n",(computer.uptime % 86400) / 3600, (computer.uptime % 3600) / 60);
+    j++;
   }else if(computer.uptime == -1){
     sprintf(info[5],"Uptime: Unkown\n");
+    j++;
   }else{
     sprintf(info[5],"Uptime : %ld mins\n",(computer.uptime % 3600) / 60);
+    j++;
   }
-
-  sprintf(info[6],"Packages: %s\n",computer.pkg); 
+  
+  if(computer.pkg != NULL){
+    sprintf(info[6],"Packages: %s\n",computer.pkg); 
+    j++;
+  }
 
   if(computer.shell != NULL){
     sprintf(info[7],"Shell:%s\n",computer.shell);
-  }else{
-    sprintf(info[7],"Shell: Unkown\n");
+    j++;
   }
 
   if(computer.display != NULL){
     sprintf(info[8],"Resolution: %s\n",computer.display);
-  }else{
-    sprintf(info[8],"Resolution: Unkown\n");
+    j++;
   }
 
   if(computer.DE != NULL){
     sprintf(info[9],"DE: %s\n",computer.DE);
-  }else{
-    sprintf(info[9],"DE: None\n");
+    j++;
   }
 
   if(computer.term != NULL){
     sprintf(info[10],"Terminal: %s\n",computer.term);
-  }else{
-    sprintf(info[10],"Terminal: Unkown\n");
+    j++;
   }
 
   if(computer.cpu != NULL){
     sprintf(info[11],"CPU%s",computer.cpu);
-  }else{
-    sprintf(info[11],"CPU: Unkown\n");
+    j++;
   }
 
   if(computer.gpu != NULL){
     sprintf(info[12],"GPU: %s\n",computer.gpu);
-  }else{
-    sprintf(info[12],"GPU: Unkown\n");
+    j++;
   }
   
   if(computer.memory != NULL){
     sprintf(info[13],"Memory: %s\n",computer.memory);
-  }else{
-    sprintf(info[13],"Memory: Unkown\n");
+    j++;
   }
 
- /*for(int y = 1; y<=19; y++){
-    for(; x<62*y ;x++){
-      printf("%c",AMD_ASCII[x]);
-    }
-    printf("\n");
-  }*/
   
   for(int i = 0; i<computer.logo->height;i++){
     for(; x<computer.logo->width*(i+1);x++){
       printf("%c", computer.logo->logo[x]);
     }
-    if(i<13){
+    if(i<j){
       printf("%s",info[i]);
     }else{
       printf("\n");

@@ -176,9 +176,7 @@ char *getPacks(){
     pclose(fp);
     j++;
   }else if(pkg[0].npacks == 0){
-    pkg[j].manager = "Unknown";
-    pkg[j].npacks = 0;
-    j++;
+    return NULL;
   }
 
   char *result = calloc(sizeof(char),1024);
