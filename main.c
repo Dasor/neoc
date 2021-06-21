@@ -52,7 +52,7 @@ int main(){
   computer.cpu = getCpu();
   computer.gpu = getGpu();
   computer.memory = getMemory();
-  computer.logo = getLogo(computer.os);
+  computer.logo = getLogo("Debian");
   int x = 0;
   char *bars;
   if(computer.user != NULL && computer.name != NULL){
@@ -119,6 +119,8 @@ int main(){
 
   if(computer.DE != NULL){
     sprintf(info[9],"DE: %s\n",computer.DE);
+  }else{
+    sprintf(info[9],"DE: None\n");
   }
 
   if(computer.term != NULL){
