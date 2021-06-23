@@ -53,7 +53,7 @@ int main(){
   computer.cpu = getCpu();
   computer.gpu = getGpu();
   computer.memory = getMemory();
-  computer.logo = getLogo(computer.os);
+  computer.logo = getLogo("Debian");
   int x = 0;
   int j = 0;
   char *bars;
@@ -151,19 +151,23 @@ int main(){
     j++;
   }
 
-  
+
+  int y = 0;
   for(int i = 0; i<computer.logo->height;i++){
-    printf("%s",color);
-    for(; x<computer.logo->width*(i+1);x++){
-      printf("%c", computer.logo->logo[x]);
+    while(computer.logo->logo[y] != '\0'){
+      printf("%c",computer.logo->logo[y]);
+      y++;
     }
-    printf(RESET);
     if(i<j){
       printf("%s",info[i]);
+      y++;
     }else{
       printf("\n");
+      y++;
     }
   }
+  
+  printf(RESET);
 
   free(computer.logo);
   free(computer.memory);

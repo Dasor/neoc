@@ -1,11 +1,13 @@
-#define BLK "\e[30m"
-#define RED "\e[31m"
-#define GRN "\e[32m"
-#define YEL "\e[33m"
-#define BLU "\e[34m"
-#define MAG "\e[35m"
-#define CYN "\e[36m"
-#define WHT "\e[37m"
+#define RESET "\e[0m"
+#define C1 "\e[30m"
+#define C2 "\e[31m"
+#define C3 "\e[32m"
+#define C4 "\e[33m"
+#define C5 "\e[34m"
+#define C6 "\e[35m"
+#define C7 "\e[36m"
+#define C8 "\e[37m"
+#define C9 "\e[1;37m"
 #include<string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -13,7 +15,6 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include "others.h"
-#include "ascii.h"
 #include <unistd.h>
 #include <limits.h>
 #include <sys/utsname.h>
@@ -36,7 +37,6 @@ typedef struct PackagesRep Pack;
 
 struct LogoRep {
 
-  int width;
   int height;
   char *logo;
   char *color;
@@ -275,25 +275,79 @@ char *getTerm(){
 
 Logo *getLogo(char *string){
 
-  Logo *logo = malloc(sizeof(Logo));
+  Logo *mylogo = malloc(sizeof(Logo));  
 
   if(strstr(string,"Arch") != NULL){
-    logo->width = 44;
-    logo->height = 19;
-    logo->color = CYN;
-    logo->logo = ARCH_ASCII;
+    mylogo->logo = 
+      C7"                      -`                     \0"\
+      C7"                     .o+`                    \0"\
+      C7"                    `ooo/                    \0"\
+      C7"                   `+oooo:                   \0"\
+      C7"                  `+oooooo:                  \0"\
+      C7"                  -+oooooo+:                 \0"\
+      C7"                `/:-:++oooo+:                \0"\
+      C7"               `/++++/+++++++:               \0"\
+      C7"              `/++++++++++++++:              \0"\
+      C7"             `/+++ooooooooooooo/`            \0"\
+      C7"            ./ooosssso++osssssso+`           \0"\
+      C7"           .oossssso-````/ossssss+`          \0"\
+      C7"          -osssssso.      :ssssssso.         \0"\
+      C7"         :osssssss/        osssso+++.        \0"\
+      C7"        /ossssssss/        +ssssooo/-        \0"\
+      C7"      `/ossssso+/:-        -:/+osssso+-      \0"\
+      C7"     `+sso+:-`                 `.-/+oso:     \0"\
+      C7"    `++:.                           `-/+/    \0"\
+      C7"    .`                                 `/    \0"\
+      ;
+    mylogo->color = C7;
+    mylogo->height = 19;
   }else if(strstr(string,"Debian") != NULL){
-    logo->width = 32;
-    logo-> height = 18;
-    logo->color = RED;
-    logo->logo = DEBIAN_ASCII;
+    mylogo->logo =
+   C9"                                 \0"\
+   C9"        _,met$$$$$gg.            \0"\
+   C9"     ,g$$$$$$$$$$$$$$$P.         \0"\
+   C9"   ,g$$P\"     \"\"\"Y$$.\".          \0"\
+   C9"  ,$$P'              `$$$.       \0"\
+   C9" ',$$P       ,ggs.     `$$b:     \0"\
+   C9" `d$$'     ,$P\"' "C2"  ."C9"    $$$      \0"\
+   C9"  $$P      d$'    "C2" , "C9"   $$P      \0"\
+   C9"  $$:      $$.  "C2" - "C9"   ,d$$'      \0"\
+   C9"  $$;      Y$b._   _,d$P'        \0"\
+   C9"  Y$$.    "C2"`."C9"`\"Y$$$$P\"'           \0"\
+   C9"  `$$b     "C2" \"-.__ "C9"               \0"\
+   C9"   `Y$$                          \0"\
+   C9"    `Y$$.                        \0"\
+   C9"      `$$b.  		                \0"\
+   C9"         `Y$$b.                   \0"\
+   C9"           `\"Y$b._               \0"\
+   C9"               `\"\"\"              \0"\
+   ;
+    mylogo->color = C2;
+    mylogo->height = 18;
   }else{
-    logo->width = 62;
-    logo-> height = 19;
-    logo->color = WHT;
-    logo->logo = UNKNOWN_ASCII;
+    mylogo->logo =
+      "                                                        \0"\
+      "                                                        \0"\
+      "                                                        \0"\
+      "                                                        \0"\
+      "                                                        \0"\
+      "                                                        \0"\
+      "                                                        \0"\
+      "                                                        \0"\
+      "                                                        \0"\
+      "                                                        \0"\
+      "                                                        \0"\
+      "                                                        \0"\
+      "                                                        \0"\
+      "                                                        \0"\
+      "                                                        \0"\
+      "                                                        \0"\
+      "                                                        \0"\
+      "                                                        \0"\
+      "                                                        \0"\
+      ;
+      mylogo->color = C9;
+      mylogo->height = 19;
   }
-
-  return logo;
-
+  return mylogo;
 }
