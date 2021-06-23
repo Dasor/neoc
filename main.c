@@ -9,7 +9,8 @@
 #include "hardware.h"
 #include "others.h"
 #include <math.h>
-
+#define RESET "\e[0m"
+#define color computer.logo->color
 
 struct PcRep{
   char *os;
@@ -57,22 +58,22 @@ int main(){
   int j = 0;
   char *bars;
   if(computer.user != NULL && computer.name != NULL){
-    sprintf(info[j],"%s@%s\n",computer.user,computer.name);
+    sprintf(info[j],"%s""%s"RESET"@""%s""%s\n"RESET,color,computer.user,color,computer.name);
     int n = strlen(computer.user)+strlen(computer.name)+2;
     bars = fillString('-',n);
     j++;
   }else if(computer.user == NULL && computer.name == NULL){
-    sprintf(info[j],"Unkown@Unkown\n");
+    sprintf(info[j],"%s""Unknown"RESET"@""%s""Unknown"RESET,color,color);
     int n = 15;
     bars = fillString('-',n);
     j++;
   }else if(computer.user == NULL){
-    sprintf(info[j],"Unkown@%s\n",computer.name);
+    sprintf(info[j],"%s""Unkown"RESET"@""%s""%s\n"RESET,color,color,computer.name);
     int n = strlen(computer.user)+8;
     bars = fillString('-',n);
     j++;
   }else if(computer.name == NULL){
-    sprintf(info[j],"%s@Unkown\n",computer.user);
+    sprintf(info[j],"%s""%s"RESET"@""%s""Unkown\n"RESET,color,computer.user,color);
     int n = 8+strlen(computer.name);
     bars = fillString('-',n); 
     j++;
@@ -82,79 +83,81 @@ int main(){
   j++;
 
   if(computer.os != NULL){
-    sprintf(info[j],"OS: %s %s\n",computer.os,computer.bits);
+    sprintf(info[j],"%s""OS"RESET": %s %s\n",color,computer.os,computer.bits);
     j++;
   }
 
   if(computer.board.chip != NULL && computer.board.version != NULL){
-    sprintf(info[j],"MotherBoard: %s %s\n",computer.board.chip,computer.board.version);
+    sprintf(info[j],"%s""MotherBoard"RESET": %s %s\n",color,computer.board.chip,computer.board.version);
     j++;
   }
 
   if(computer.kernel != NULL){
-    sprintf(info[j],"Kernel: %s\n",computer.kernel);
+    sprintf(info[j],"%s""Kernel"RESET": %s\n",color,computer.kernel);
     j++;
   }
 
   if(computer.uptime > 86400){
-    sprintf(info[j],"Uptime : %ld days, %ld hours, %ld mins\n",computer.uptime/86400, (computer.uptime % 86400) / 3600, (computer.uptime % 3600) / 60);
+    sprintf(info[j],"%s""Uptime"RESET": %ld days, %ld hours, %ld mins\n",color,computer.uptime/86400, (computer.uptime % 86400) / 3600, (computer.uptime % 3600) / 60);
     j++;
   }else if(computer.uptime > 3600){
-    sprintf(info[j],"Uptime : %ld hours, %ld mins\n",(computer.uptime % 86400) / 3600, (computer.uptime % 3600) / 60);
+    sprintf(info[j],"%s""Uptime"RESET": %ld hours, %ld mins\n",color,(computer.uptime % 86400) / 3600, (computer.uptime % 3600) / 60);
     j++;
   }else if(computer.uptime == -1){
-    sprintf(info[j],"Uptime: Unkown\n");
+    sprintf(info[j],"%s""Uptime"RESET": Unkown\n",color);
     j++;
   }else{
-    sprintf(info[j],"Uptime : %ld mins\n",(computer.uptime % 3600) / 60);
+    sprintf(info[j],"%s""Uptime"RESET": %ld mins\n",color,(computer.uptime % 3600) / 60);
     j++;
   }
   
   if(computer.pkg != NULL){
-    sprintf(info[j],"Packages: %s\n",computer.pkg); 
+    sprintf(info[j],"%s""Packages"RESET": %s\n",color,computer.pkg); 
     j++;
   }
 
-  if(computer.shell != NULL){
-    sprintf(info[j],"Shell:%s\n",computer.shell);
+  if(computer.shell != NULL){ 
+    sprintf(info[j],"%s""Shell"RESET":%s\n",color,computer.shell);
     j++;
   }
 
   if(computer.display != NULL){
-    sprintf(info[j],"Resolution: %s\n",computer.display);
+    sprintf(info[j],"%s""Resolution"RESET": %s\n",color,computer.display);
     j++;
   }
 
   if(computer.DE != NULL){
-    sprintf(info[j],"DE: %s\n",computer.DE);
+    sprintf(info[j],"%s""DE"RESET": %s\n",color,computer.DE);
     j++;
   }
 
   if(computer.term != NULL){
-    sprintf(info[j],"Terminal: %s\n",computer.term);
+    sprintf(info[j],"%s""Terminal"RESET": %s\n",color,computer.term);
     j++;
   }
 
   if(computer.cpu != NULL){
-    sprintf(info[j],"CPU%s",computer.cpu);
+    sprintf(info[j],"%s""CPU"RESET"%s",color,computer.cpu);
     j++;
   }
 
   if(computer.gpu != NULL){
-    sprintf(info[j],"GPU: %s\n",computer.gpu);
+    sprintf(info[j],"%s""GPU"RESET": %s\n",color,computer.gpu);
     j++;
   }
   
   if(computer.memory != NULL){
-    sprintf(info[j],"Memory: %s\n",computer.memory);
+    sprintf(info[j],"%s""Memory"RESET": %s\n",color,computer.memory);
     j++;
   }
 
   
   for(int i = 0; i<computer.logo->height;i++){
+    printf("%s",color);
     for(; x<computer.logo->width*(i+1);x++){
       printf("%c", computer.logo->logo[x]);
     }
+    printf(RESET);
     if(i<j){
       printf("%s",info[i]);
     }else{

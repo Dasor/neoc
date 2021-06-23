@@ -7,6 +7,7 @@ struct LogoRep {
   int width;
   int height;
   char *logo;
+  char *color;
 
 };
 

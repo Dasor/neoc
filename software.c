@@ -1,3 +1,11 @@
+#define BLK "\e[30m"
+#define RED "\e[31m"
+#define GRN "\e[32m"
+#define YEL "\e[33m"
+#define BLU "\e[34m"
+#define MAG "\e[35m"
+#define CYN "\e[36m"
+#define WHT "\e[37m"
 #include<string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -31,6 +39,7 @@ struct LogoRep {
   int width;
   int height;
   char *logo;
+  char *color;
 
 };
 
@@ -267,18 +276,21 @@ char *getTerm(){
 Logo *getLogo(char *string){
 
   Logo *logo = malloc(sizeof(Logo));
-  
+
   if(strstr(string,"Arch") != NULL){
     logo->width = 44;
     logo->height = 19;
+    logo->color = CYN;
     logo->logo = ARCH_ASCII;
   }else if(strstr(string,"Debian") != NULL){
     logo->width = 32;
     logo-> height = 18;
+    logo->color = RED;
     logo->logo = DEBIAN_ASCII;
   }else{
     logo->width = 62;
     logo-> height = 19;
+    logo->color = WHT;
     logo->logo = UNKNOWN_ASCII;
   }
 
