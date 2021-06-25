@@ -53,7 +53,7 @@ int main(){
   computer.cpu = getCpu();
   computer.gpu = getGpu();
   computer.memory = getMemory();
-  computer.logo = getLogo("Debian");
+  computer.logo = getLogo(computer.os);
   int x = 0;
   int j = 0;
   char *bars;

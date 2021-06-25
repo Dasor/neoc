@@ -120,7 +120,7 @@ char *getCpu(){
 }
 
 char *getGpu(){
-  if(system("lspci >>/dev/null 2>>/dev/null") != -1){
+  if(system("lspci >>/dev/null 2>>/dev/null") != 32512){
   FILE *fp = popen("lspci | grep VGA","r");
   char read[1024];
   char *tmp;
