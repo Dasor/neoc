@@ -79,7 +79,7 @@ int main(){
     j++;
   }
 
-  sprintf(info[j],"%s\n",bars);
+  sprintf(info[j],RESET"%s\n",bars);
   j++;
 
   if(computer.os != NULL){

@@ -1,4 +1,5 @@
-
+#include<sys/types.h>
+#include<dirent.h>
 #include<string.h>
 #include<stdio.h>
 #include<stdlib.h>
@@ -54,4 +55,18 @@ int i = 0 , j = 0;
       strcpy(result,read);
       return result;
 
+}
+
+int NumOfPackages(char *path){
+  struct dirent *ep;
+  int i = 0;
+  DIR *dp = opendir(path);
+  if( dp != NULL){
+    while((ep = readdir(dp)) != NULL){
+        i++;
+      }
+    closedir(dp);
+    }
+  i = i-2;
+  return i;
 }

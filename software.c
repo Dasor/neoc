@@ -150,41 +150,38 @@ char *getPacks(){
   char packs[6];
   Pack *pkg = malloc(sizeof(Pack)*4);
   struct stat stats;
-  int i = 0;
   int j = 0;
+  int i = 0;
+  char read[1024];
 
   if(stat("/var/cache/pacman",&stats) == 0 && S_ISDIR(stats.st_mode) == 1){
     pkg[j].manager = "pacman";
-    struct dirent *ep;
-    DIR *dp = opendir("/var/lib/pacman/local");
-    if( dp != NULL){
-      while((ep = readdir(dp)) != NULL){
-        i++;
-      }
-    closedir(dp);
-    }
-    pkg[j].npacks = i-3;
+    pkg[j].npacks = NumOfPackages("/var/lib/pacman/local") - 1;
     j++;
-  }else if(stat("/var/lib/snapd/snaps",&stats) == 0 && S_ISDIR(stats.st_mode) == 1){ 
+  }if(stat("/var/lib/snapd/snaps",&stats) == 0 && S_ISDIR(stats.st_mode) == 1){ 
     pkg[j].manager = "snap";
-    fp = popen("find /var/snap/ -maxdepth 1 | wc -l","r");
-    pkg[j].npacks = atoi(fgets(packs,6,fp));
-    pkg[j].npacks--;
-    pclose(fp);
+    pkg[j].npacks = NumOfPackages("/snap") - 2;
     j++;
-  }else if(stat("/var/cache/apt",&stats) == 0 && S_ISDIR(stats.st_mode) == 1){ 
-    fp = popen("apt-cache pkgnames | wc -l","r"); 
-    pkg[j].npacks = atoi(fgets(packs,6,fp));
-    pkg[j].manager = "apt";
-    pclose(fp);
+  }if(stat("/var/lib/dpkg",&stats) == 0 && S_ISDIR(stats.st_mode) == 1){ 
+    pkg[j].manager = "dpkg";
+    fp = fopen("/var/lib/dpkg/status","r");
+    if(fp != NULL){
+      while(fgets(read,1024,fp) != NULL){
+        if(strstr(read,"Status:") != NULL ){
+          i++;
+        }
+      }
+    }
+    pkg[j].npacks = i;
+    fclose(fp);
     j++;
-  }else if(stat("/var/lib/rpm",&stats) == 0 || S_ISDIR(stats.st_mode) == 1){
+  }if(stat("/var/lib/rpm",&stats) == 0 && S_ISDIR(stats.st_mode) == 1){
     pkg[j].manager = "rpm";
     fp = popen("rpm -qa | wc -l","r");
     pkg[j].npacks = atoi(fgets(packs,6,fp));
     pclose(fp);
     j++;
-  }else if(pkg[0].npacks == 0){
+  }if(pkg[0].npacks == 0){
     return NULL;
   }
 
@@ -204,7 +201,7 @@ char *getPacks(){
       result = strcat(result , " ");
       result = strcat(result,"(");
       result = strcat(result,pkg[a].manager);
-      result = strcat(result,"),");
+      result = strcat(result,"), ");
     }
   }
   
