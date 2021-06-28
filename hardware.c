@@ -1,4 +1,5 @@
 #include <X11/Xlib.h>
+#include <pci/pci.h>
 #include <X11/Xatom.h>
 #include<string.h>
 #include<stdio.h>
@@ -120,33 +121,33 @@ char *getCpu(){
 }
 
 char *getGpu(){
-  if(system("lspci >>/dev/null 2>>/dev/null") != 32512){
-  FILE *fp = popen("lspci | grep -E \"(VGA|3D)\"","r");
-  char read[1024];
-  char *tmp;
-  int i = 1;
-  char *result;
-  while(fgets(read,1024,fp) != NULL){
-    if((tmp = strchr(read,'[')) == NULL){
-      tmp = strrchr(read,':');
-      tmp = tmp + 2;
-      i = strlen(tmp)+1;
-      result = malloc(sizeof(char)*i);
-      strcpy(result,tmp);
-      result[i-2] = '\0';
-    }else{
-  
-    result = fixString(tmp,'[',']',1);
-    pclose(fp);
-    return result;
 
+  struct pci_access *pacc;
+  struct pci_dev *dev;
+  unsigned int c;
+  char namebuf[1024];
+  char *name;
+  char *class;
+
+  pacc = pci_alloc();		/* Get the pci_access structure */
+  /* Set all options you want -- here we stick with the defaults */
+  pci_init(pacc);		/* Initialize the PCI library */
+  pci_scan_bus(pacc);		/* We want to get the list of devices */
+  for (dev=pacc->devices; dev; dev=dev->next){
+      pci_fill_info(dev, PCI_FILL_IDENT | PCI_FILL_BASES | PCI_FILL_CLASS);	/* Fill in header info we need */
+      c = pci_read_byte(dev, PCI_INTERRUPT_PIN);
+      class = pci_lookup_name(pacc, namebuf, sizeof(namebuf), PCI_LOOKUP_CLASS, dev->device_class);
+       if(strcmp("VGA compatible controller",class) == 0 || strcmp("3D controller",class) == 0){
+         name = pci_lookup_name(pacc, namebuf, sizeof(namebuf), PCI_LOOKUP_DEVICE, dev->vendor_id, dev->device_id);
+         if(strchr(name,'[') != NULL){
+          name = fixString(name,'[',']',1);
+          pci_cleanup(pacc);		/* Close everything */
+          return name;
+         }
+       }
     }
-  }
-  pclose(fp);
-  return result;
-  }else{
-    return NULL;
-  }
+  pci_cleanup(pacc);		/* Close everything */
+  return name;
 }
 
 char *getMemory(){

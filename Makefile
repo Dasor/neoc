@@ -5,4 +5,4 @@ SANITY_FLAGS=-Wfloat-equal -Wshadow -Wpointer-arith
 #Im not using the flags since they say some varaibles form unistd.h are no defined will fix it
 
 neoc: Makefile main.c hardware.c hardware.h software.c software.h others.c others.h
-	 $(CC) main.c hardware.c software.c others.c -g -lX11 -lm -o neoc
+	 $(CC) main.c hardware.c software.c others.c -g -lpci -lX11 -lm -o neoc

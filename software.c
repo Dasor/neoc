@@ -1,12 +1,12 @@
 #define RESET "\e[0m"
 #define C1 "\e[30m"
-#define C2 "\e[31m"
-#define C3 "\e[32m"
-#define C4 "\e[33m"
-#define C5 "\e[34m"
-#define C6 "\e[35m"
-#define C7 "\e[36m"
-#define C8 "\e[37m"
+#define C2 "\e[1;31m"
+#define C3 "\e[1;32m"
+#define C4 "\e[1;33m"
+#define C5 "\e[1;34m"
+#define C6 "\e[1;35m"
+#define C7 "\e[1;36m"
+#define C8 "\e[1;37m"
 #define C9 "\e[1;37m"
 #include<string.h>
 #include <sys/stat.h>
@@ -306,12 +306,12 @@ Logo *getLogo(char *string){
    C9"   ,g$$P\"     \"\"\"Y$$.\".          \0"\
    C9"  ,$$P'              `$$$.       \0"\
    C9" ',$$P       ,ggs.     `$$b:     \0"\
-   C9" `d$$'     ,$P\"' "C2"  ."C9"    $$$      \0"\
-   C9"  $$P      d$'    "C2" , "C9"   $$P      \0"\
-   C9"  $$:      $$.  "C2" - "C9"   ,d$$'      \0"\
+   C9" `d$$'     ,$P\"' "C9"  ."C9"    $$$      \0"\
+   C9"  $$P      d$'    "C9" , "C9"   $$P      \0"\
+   C9"  $$:      $$.  "C9" - "C9"   ,d$$'      \0"\
    C9"  $$;      Y$b._   _,d$P'        \0"\
-   C9"  Y$$.    "C2"`."C9"`\"Y$$$$P\"'           \0"\
-   C9"  `$$b     "C2" \"-.__ "C9"               \0"\
+   C9"  Y$$.    "C9"`."C9"`\"Y$$$$P\"'           \0"\
+   C9"  `$$b     "C9" \"-.__ "C9"               \0"\
    C9"   `Y$$                          \0"\
    C9"    `Y$$.                        \0"\
    C9"      `$$b.  		                \0"\
@@ -319,8 +319,33 @@ Logo *getLogo(char *string){
    C9"           `\"Y$b._               \0"\
    C9"               `\"\"\"              \0"\
    ;
-    mylogo->color = C2;
+    mylogo->color = C9;
     mylogo->height = 18;
+  }else if(strstr(string,"Ubuntu") != NULL){
+    mylogo->logo =
+      C2"            .-/+oossssoo+\\-.               \0"\
+      C2"        ´:+ssssssssssssssssss+:`           \0"\
+      C2"      -+ssssssssssssssssssyyssss+-         \0"\
+      C2"    .ossssssssssssssssss"C9"dMMMNy"C2"sssso.       \0"\
+      C2"   /sssssssssss"C9"hdmmNNmmyNMMMMh"C2"ssssss\\      \0"\
+      C2"  +sssssssss"C9"hm"C2"yd"C9"MMMMMMMNddddy"C2"ssssssss+     \0"\
+      C2" /ssssssss"C9"hNMMM"C2"yh"C9"hyyyyhmNMMMNh"C2"ssssssss\\    \0"\
+      C2".ssssssss"C9"dMMMNh"C2"ssssssssss"C9"hNMMMd"C2"ssssssss.   \0"\
+      C2"+ssss"C9"hhhyNMMNy"C2"ssssssssssss"C9"yNMMMy"C2"sssssss+   \0"\
+      C2"oss"C9"yNMMMNyMMh"C2"ssssssssssssss"C9"hmmmh"C2"ssssssso   \0"\
+      C2"oss"C9"yNMMMNyMMh"C2"sssssssssssssshmmmh"C2"ssssssso   \0"\
+      C2"+ssss"C9"hhhyNMMNy"C2"ssssssssssss"C9"yNMMMy"C2"sssssss+   \0"\
+      C2".ssssssss"C9"dMMMNh"C2"ssssssssss"C9"hNMMMd"C2"ssssssss.   \0"\
+      C2" \\ssssssss"C9"hNMMM"C2"yh"C9"hyyyyhdNMMMNh"C2"ssssssss/    \0"\
+      C2"  +sssssssss"C9"dm"C2"yd"C9"MMMMMMMMddddy"C2"ssssssss+     \0"\
+      C2"   \\sssssssssss"C9"hdmNNNNmyNMMMMh"C2"ssssss/             \0"\
+      C2"    .ossssssssssssssssss"C9"dMMMNy"C2"sssso.               \0"\
+      C2"      -+sssssssssssssssss"C9"yyy"C2"ssss+-                 \0"\
+      C2"        `:+ssssssssssssssssss+:`                           \0"\
+      C2"            .-\\+oossssoo+/-.                              \0"\
+      ;
+    mylogo->color = C2;
+    mylogo->height = 20;
   }else{
     mylogo->logo =
       "                                                        \0"\
