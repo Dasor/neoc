@@ -1,13 +1,14 @@
-#define RESET "\e[0m"
-#define C1 "\e[30m"
-#define C2 "\e[1;31m"
-#define C3 "\e[1;32m"
-#define C4 "\e[1;33m"
-#define C5 "\e[1;34m"
-#define C6 "\e[1;35m"
-#define C7 "\e[1;36m"
-#define C8 "\e[1;37m"
-#define C9 "\e[1;37m"
+#define RESET "\033[0m"
+#define C1 "\033[30m"
+#define C2 "\033[1;31m"
+#define C3 "\033[1;32m"
+#define C4 "\033[1;33m"
+#define C5 "\033[1;34m"
+#define C6 "\033[1;35m"
+#define C7 "\033[1;36m"
+#define C8 "\033[1;37m"
+#define C9 "\033[1;37m"
+#define _GNU_SOURCE
 #include<string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -306,12 +307,12 @@ Logo *getLogo(char *string){
    C9"   ,g$$P\"     \"\"\"Y$$.\".          \0"\
    C9"  ,$$P'              `$$$.       \0"\
    C9" ',$$P       ,ggs.     `$$b:     \0"\
-   C9" `d$$'     ,$P\"' "C9"  ."C9"    $$$      \0"\
-   C9"  $$P      d$'    "C9" , "C9"   $$P      \0"\
-   C9"  $$:      $$.  "C9" - "C9"   ,d$$'      \0"\
+   C9" `d$$'     ,$P\"' "C2"  ."C9"    $$$      \0"\
+   C9"  $$P      d$'    "C2" , "C9"   $$P      \0"\
+   C9"  $$:      $$.  "C2" - "C9"   ,d$$'      \0"\
    C9"  $$;      Y$b._   _,d$P'        \0"\
-   C9"  Y$$.    "C9"`."C9"`\"Y$$$$P\"'           \0"\
-   C9"  `$$b     "C9" \"-.__ "C9"               \0"\
+   C9"  Y$$.    "C2"`."C9"`\"Y$$$$P\"'           \0"\
+   C9"  `$$b     "C2" \"-.__ "C9"               \0"\
    C9"   `Y$$                          \0"\
    C9"    `Y$$.                        \0"\
    C9"      `$$b.  		                \0"\
@@ -319,7 +320,7 @@ Logo *getLogo(char *string){
    C9"           `\"Y$b._               \0"\
    C9"               `\"\"\"              \0"\
    ;
-    mylogo->color = C9;
+    mylogo->color = C2;
     mylogo->height = 18;
   }else if(strstr(string,"Ubuntu") != NULL){
     mylogo->logo =

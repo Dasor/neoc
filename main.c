@@ -9,7 +9,7 @@
 #include "hardware.h"
 #include "others.h"
 #include <math.h>
-#define RESET "\e[0m"
+#define RESET "\033[0m"
 #define color computer.logo->color
 
 struct PcRep{
@@ -28,6 +28,7 @@ struct PcRep{
   char *cpu;
   char *gpu;
   char *memory;
+  char *disk;
   Logo *logo;
 
 };
@@ -53,8 +54,8 @@ int main(){
   computer.cpu = getCpu();
   computer.gpu = getGpu();
   computer.memory = getMemory();
+  computer.disk = getDisk();
   computer.logo = getLogo(computer.os);
-  int x = 0;
   int j = 0;
   char *bars;
   if(computer.user != NULL && computer.name != NULL){
@@ -151,6 +152,10 @@ int main(){
     j++;
   }
 
+  if(computer.disk != NULL){
+    sprintf(info[j],"%s""Disk"RESET": %s\n" ,color,computer.disk);
+    j++;
+  }
 
   int y = 0;
   for(int i = 0; i<computer.logo->height;i++){
@@ -183,4 +188,5 @@ int main(){
   free(computer.kernel);
   free(bars);
   free(computer.bits);
+  free(computer.disk);
 }

@@ -16,5 +16,6 @@ char *getDisplay();
 char *getCpu();
 char *getGpu();
 char *getMemory();
+char *getDisk();
 
 #endif

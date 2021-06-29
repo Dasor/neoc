@@ -1,3 +1,4 @@
+#include <sys/statvfs.h>
 #include <X11/Xlib.h>
 #include <pci/pci.h>
 #include <X11/Xatom.h>
@@ -124,9 +125,8 @@ char *getGpu(){
 
   struct pci_access *pacc;
   struct pci_dev *dev;
-  unsigned int c;
   char namebuf[1024];
-  char *name;
+  char *name = NULL;
   char *class;
 
   pacc = pci_alloc();		/* Get the pci_access structure */
@@ -135,7 +135,6 @@ char *getGpu(){
   pci_scan_bus(pacc);		/* We want to get the list of devices */
   for (dev=pacc->devices; dev; dev=dev->next){
       pci_fill_info(dev, PCI_FILL_IDENT | PCI_FILL_BASES | PCI_FILL_CLASS);	/* Fill in header info we need */
-      c = pci_read_byte(dev, PCI_INTERRUPT_PIN);
       class = pci_lookup_name(pacc, namebuf, sizeof(namebuf), PCI_LOOKUP_CLASS, dev->device_class);
        if(strcmp("VGA compatible controller",class) == 0 || strcmp("3D controller",class) == 0){
          name = pci_lookup_name(pacc, namebuf, sizeof(namebuf), PCI_LOOKUP_DEVICE, dev->vendor_id, dev->device_id);
@@ -183,11 +182,31 @@ char *getMemory(){
     total_memory = total / 1024;
     int percentage = (int) (100 * (used_memory / (double) total_memory));
 
-    char *memory = malloc(150);
+    char *memory = malloc(sizeof(char)*150);
     snprintf(memory, 150, "%dMiB / %dMiB (%d%%)", used_memory, total_memory, percentage);
 
     return memory;
 
 }
 
+char *getDisk(){
+  int state;
+  int block_size;
+  fsblkcnt_t total; 
+  fsblkcnt_t free;
+  fsblkcnt_t used;
+  struct statvfs vfs;
+  char *disk = malloc(sizeof(char)*150);
+  state = statvfs("/",&vfs);
+  if(state != 0){
+    return NULL;
+  }
+  block_size = vfs.f_bsize;
+  total = (vfs.f_blocks * block_size)/1000000000;
+  free = (vfs.f_bfree * block_size)/1000000000;
+  used = ((vfs.f_blocks - vfs.f_bavail) * block_size)/1000000000;
+  double percentaje = ((double)used / total) * 100;
+  snprintf(disk,150, "%dGB / %dGB (%.0lf%%)",free,total,percentaje);
+  return disk;
 
+}
