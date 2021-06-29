@@ -126,7 +126,7 @@ char *getGpu(){
   struct pci_access *pacc;
   struct pci_dev *dev;
   char namebuf[1024];
-  char *name = NULL;
+  char *name = malloc(sizeof(char)*150);
   char *class;
 
   pacc = pci_alloc();		/* Get the pci_access structure */
@@ -137,9 +137,9 @@ char *getGpu(){
       pci_fill_info(dev, PCI_FILL_IDENT | PCI_FILL_BASES | PCI_FILL_CLASS);	/* Fill in header info we need */
       class = pci_lookup_name(pacc, namebuf, sizeof(namebuf), PCI_LOOKUP_CLASS, dev->device_class);
        if(strcmp("VGA compatible controller",class) == 0 || strcmp("3D controller",class) == 0){
-         name = pci_lookup_name(pacc, namebuf, sizeof(namebuf), PCI_LOOKUP_DEVICE, dev->vendor_id, dev->device_id);
+         strcpy(name,pci_lookup_name(pacc, namebuf, sizeof(namebuf), PCI_LOOKUP_DEVICE, dev->vendor_id, dev->device_id));
          if(strchr(name,'[') != NULL){
-          name = fixString(name,'[',']',1);
+          name = fixString(name,'[',']',0);
           pci_cleanup(pacc);		/* Close everything */
           return name;
          }
@@ -206,7 +206,7 @@ char *getDisk(){
   free = (vfs.f_bfree * block_size)/1000000000;
   used = ((vfs.f_blocks - vfs.f_bavail) * block_size)/1000000000;
   double percentaje = ((double)used / total) * 100;
-  snprintf(disk,150, "%dGB / %dGB (%.0lf%%)",free,total,percentaje);
+  snprintf(disk,150, "%0.luGB / %0.luGB (%.0lf%%)",free,total,percentaje);
   return disk;
 
 }

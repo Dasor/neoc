@@ -8,7 +8,7 @@ char *fixString(char *ptr,char c1, char c2,short ispointer){
   int n = strlen(ptr);
   int i = 0;
   char *string;
-  if(ispointer == 1){
+  if(ispointer == 1){//1 for pointer , 0 for array//
     string = malloc(sizeof(char)*n+1);
     strcpy(string,ptr);
   }else{
