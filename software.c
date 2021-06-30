@@ -149,7 +149,7 @@ char *getPacks(){
 
   FILE *fp;
   char packs[6];
-  Pack *pkg = malloc(sizeof(Pack)*4);
+  Pack *pkg = malloc(sizeof(Pack)*5);
   struct stat stats;
   int j = 0;
   int i = 0;
@@ -181,6 +181,10 @@ char *getPacks(){
     fp = popen("rpm -qa | wc -l","r");
     pkg[j].npacks = atoi(fgets(packs,6,fp));
     pclose(fp);
+    j++;
+  }if(stat("/var/lib/flatpak",&stats) == 0 && S_ISDIR(stats.st_mode) == 1){ 
+    pkg[j].manager = "flatpak";
+    pkg[j].npacks = NumOfPackages("/var/lib/flatpak/app");
     j++;
   }if(pkg[0].npacks == 0){
     return NULL;
@@ -315,7 +319,7 @@ Logo *getLogo(char *string){
    C9"  `$$b     "C2" \"-.__ "C9"               \0"\
    C9"   `Y$$                          \0"\
    C9"    `Y$$.                        \0"\
-   C9"      `$$b.  		                \0"\
+   C9"      `$$b.  		         \0"\
    C9"         `Y$$b.                   \0"\
    C9"           `\"Y$b._               \0"\
    C9"               `\"\"\"              \0"\
@@ -347,6 +351,29 @@ Logo *getLogo(char *string){
       ;
     mylogo->color = C2;
     mylogo->height = 20;
+  }else if(strstr(string,"Gentoo") != NULL){
+    mylogo->logo =
+      C6"         -/oyddmdhs+:.                 \0"\
+      C6"     -o"C9"dNMMMMMMMMNNmhy+"C6"-`              \0"\
+      C6"   -y"C9"NMMMMMMMMMMMNNNmmdhy"C6"+-            \0"\
+      C6" `o"C9"mMMMMMMMMMMMMNmdmmmmddhhy"C6"/`         \0"\
+      C6" om"C9"MMMMMMMMMMMN"C6"hhyyyo"C9"hmdddhhhd"C6"o`       \0"\
+      C6".y"C9"dMMMMMMMMMMd"C6"hs++so/s"C9"mdddhhhhdm"C6"+`     \0"\
+      C6" oy"C9"hdmNMMMMMMMN"C6"dyooy"C9"dmddddhhhhyhN"C6"d.    \0"\
+      C6"  :o"C9"yhhdNNMMMMMMMNNNmmdddhhhhhyym"C6"Mh    \0"\
+      C6"    .:"C9"+sydNMMMMMNNNmmmdddhhhhhhmM"C6"my    \0"\
+      C6"       /m"C9"MMMMMMNNNmmmdddhhhhhmMNh"C6"s:    \0"\
+      C6"    `o"C9"NMMMMMMMNNNmmmddddhhdmMNhs"C6"+`     \0"\
+      C6"  `s"C9"NMMMMMMMMNNNmmmdddddmNMmhs"C6"/.       \0"\
+      C6" /N"C9"MMMMMMMMNNNNmmmdddmNMNdso"C6":`         \0"\
+      C6"+M"C9"MMMMMMNNNNNmmmmdmNMNdso"C6"/-            \0"\
+      C6"yM"C9"MNNNNNNNmmmmmNNMmhs+/"C6"-`              \0"\
+      C6"/h"C9"MMNNNNNNNNMNdhs++/"C6"-`                 \0"\
+      C6"`/"C9"ohdmmddhys+++/:"C6".`                    \0"\
+      C6"  `-//////:--.                          \0"\
+      ;
+    mylogo->color = C6;
+    mylogo->height =18;
   }else{
     mylogo->logo =
       "                                                        \0"\
