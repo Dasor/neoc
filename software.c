@@ -161,7 +161,7 @@ char *getPacks(){
     j++;
   }if(stat("/var/lib/snapd/snaps",&stats) == 0 && S_ISDIR(stats.st_mode) == 1){ 
     pkg[j].manager = "snap";
-    pkg[j].npacks = NumOfPackages("/snap") - 2;
+    pkg[j].npacks = NumOfPackages("/snap") - 1;
     j++;
   }if(stat("/var/lib/dpkg",&stats) == 0 && S_ISDIR(stats.st_mode) == 1){ 
     pkg[j].manager = "dpkg";

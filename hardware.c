@@ -128,6 +128,7 @@ char *getGpu(){
   char namebuf[1024];
   char *name = malloc(sizeof(char)*150);
   char *class;
+  int i = 0;
 
   pacc = pci_alloc();		/* Get the pci_access structure */
   /* Set all options you want -- here we stick with the defaults */
@@ -146,6 +147,10 @@ char *getGpu(){
        }
     }
   pci_cleanup(pacc);		/* Close everything */
+  if(i == 0){ //no gpu
+    free(name);
+    name = NULL;
+  }
   return name;
 }
 
