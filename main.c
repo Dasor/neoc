@@ -34,7 +34,6 @@ struct PcRep{
 };
 
 typedef struct PcRep Pc;
-
 int main(){
   char info[15][100];
 

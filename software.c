@@ -155,7 +155,7 @@ char *getPacks(){
   int i = 0;
   char read[1024];
 
-  if(stat("/var/cache/pacman",&stats) == 0 && S_ISDIR(stats.st_mode) == 1){
+  if(stat("/var/lib/pacman/local",&stats) == 0 && S_ISDIR(stats.st_mode) == 1){
     pkg[j].manager = "pacman";
     pkg[j].npacks = NumOfPackages("/var/lib/pacman/local") - 1;
     j++;
@@ -182,7 +182,7 @@ char *getPacks(){
     pkg[j].npacks = atoi(fgets(packs,6,fp));
     pclose(fp);
     j++;
-  }if(stat("/var/lib/flatpak",&stats) == 0 && S_ISDIR(stats.st_mode) == 1){ 
+  }if(stat("/var/lib/flatpak/app",&stats) == 0 && S_ISDIR(stats.st_mode) == 1){ 
     pkg[j].manager = "flatpak";
     pkg[j].npacks = NumOfPackages("/var/lib/flatpak/app");
     j++;
@@ -374,7 +374,30 @@ Logo *getLogo(char *string){
       ;
     mylogo->color = C6;
     mylogo->height =18;
-  }else{
+  }else if(strstr(string,"Fedora") != NULL){
+    mylogo->logo =
+      C5"          /:-------------:\\           \0"\
+      C5"       :-------------------::         \0"\
+      C5"     :-----------"C9"/shhOHbmp"C5"---:\\       \0"\
+      C5"   /-----------"C9"omMMMNNNMMD  "C5"---:      \0"\
+      C5"  :-----------"C9"sMMMMNMNMP"C5".    ---:     \0"\
+      C5" :-----------"C9":MMMdP"C5"-------    ---\\    \0"\
+      C5",------------"C9":MMMd"C5"--------    ---:    \0"\
+      C5":------------"C9":MMMd"C5"-------    .---:    \0"\
+      C5":----    "C9"oNMMMMMMMMMNho"C5"     .----:    \0"\
+      C5":--     ."C9"+shhhMMMmhhy++"C5"   .------/    \0"\
+      C5":-    -------"C9":MMMd"C5"--------------:     \0"\
+      C5":-   --------"C9"/MMMd"C5"-------------;      \0"\
+      C5":-    ------"C9"/hMMMy"C5"------------:       \0"\
+      C5":--"C9" :dMNdhhdNMMNo"C5"------------;        \0"\
+      C5":---"C9":sdNMMMMNds:"C5"------------:         \0"\
+      C5":------"C9":://:"C5"-------------::      \0"\
+      C5":---------------------://               \0"\
+      ;
+    mylogo->color = C5;
+    mylogo->height = 19;
+  }
+  else{
     mylogo->logo =
       "                                                        \0"\
       "                                                        \0"\
