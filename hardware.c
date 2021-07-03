@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <limits.h>
 #include "others.h"
+#include "intelgpu.h"
 
 struct BoardRep{
   
@@ -128,7 +129,9 @@ char *getGpu(){
   char namebuf[1024];
   char *name = malloc(sizeof(char)*150);
   char *class;
+  char *intelgpu; 
   int i = 0;
+  int id;
 
   pacc = pci_alloc();		/* Get the pci_access structure */
   /* Set all options you want -- here we stick with the defaults */
@@ -139,6 +142,8 @@ char *getGpu(){
       class = pci_lookup_name(pacc, namebuf, sizeof(namebuf), PCI_LOOKUP_CLASS, dev->device_class);
        if(strcmp("VGA compatible controller",class) == 0 || strcmp("3D controller",class) == 0){
          strcpy(name,pci_lookup_name(pacc, namebuf, sizeof(namebuf), PCI_LOOKUP_DEVICE, dev->vendor_id, dev->device_id));
+         i++;
+         id = dev->device_id;
          if(strchr(name,'[') != NULL){
           name = fixString(name,'[',']',0);
           pci_cleanup(pacc);		/* Close everything */
@@ -150,6 +155,13 @@ char *getGpu(){
   if(i == 0){ //no gpu
     free(name);
     name = NULL;
+  }else{
+    intelgpu = find_gpu(id);
+    if(intelgpu != NULL){
+      free(name);
+      name = malloc(sizeof(char)*150);
+      strcpy(name,intelgpu);
+    }
   }
   return name;
 }

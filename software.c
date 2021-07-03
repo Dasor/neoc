@@ -243,7 +243,7 @@ char *getShell(){
 
 char *getDE(){
   char *result = getenv("XDG_CURRENT_DESKTOP");
-  if (result == NULL){
+  if (result == NULL || strcmp(result,"") == 0){
     return NULL;
   }
   if(strchr(result,':') != NULL ){
@@ -395,7 +395,7 @@ Logo *getLogo(char *string){
       C5":---------------------://               \0"\
       ;
     mylogo->color = C5;
-    mylogo->height = 19;
+    mylogo->height = 17;
   }
   else{
     mylogo->logo =

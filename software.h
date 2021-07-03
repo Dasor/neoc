@@ -1,5 +1,5 @@
-#ifndef OS_H
-#define OS_H
+#ifndef SOFTWARE_H
+#define SOFTWARE_H
 
 
 struct LogoRep {
