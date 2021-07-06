@@ -3,6 +3,9 @@
 #include<string.h>
 #include<stdio.h>
 #include<stdlib.h>
+#include"hardware.h"
+#include"software.h"
+#include"main.h"
 
 char *fixString(char *ptr,char c1, char c2,short ispointer){
   int n = strlen(ptr);
@@ -70,3 +73,4 @@ int NumOfPackages(char *path){
   i = i-2;
   return i;
 }
+

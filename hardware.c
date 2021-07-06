@@ -111,7 +111,9 @@ char *getDisplays(){
    resolution = numUntilchar(read,' '); 
    strcat(result,resolution);
    strcat(result," ");
+   free(resolution);
   } 
+  pclose(fp);
   return result;
 }
 
