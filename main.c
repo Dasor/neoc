@@ -33,6 +33,7 @@ typedef struct InfoRep Info;
 
 int main(int argc, char *argv[]){
 
+  (void)argc;
   Info *computer = malloc(sizeof(Info));
   //get all info
   computer->os = getOS();

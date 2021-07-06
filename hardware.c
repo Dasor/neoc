@@ -1,3 +1,4 @@
+#define _DEFAULT_SOURCE
 #include <sys/statvfs.h>
 #include <X11/Xlib.h>
 #include <pci/pci.h>
