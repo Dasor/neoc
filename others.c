@@ -44,16 +44,16 @@ int i = 0 , j = 0;
 
  while(read[i] < 48 || read[i]>57){
         i++;
-      }
-      while(read[i] != c1){
-        read[j] = read[i];
-        j++;
-        i++;
-       }
-      read[j] = '\0';
-      char *result = malloc(sizeof(char)*strlen(read)+1);
-      strcpy(result,read);
-      return result;
+ }
+  while(read[i] != c1){
+    read[j] = read[i];
+    j++;
+    i++;
+  }
+  read[j] = '\0';
+  char *result = malloc(sizeof(char)*strlen(read)+1);
+  strcpy(result,read);
+  return result;
 
 }
 

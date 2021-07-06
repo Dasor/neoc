@@ -10,9 +10,9 @@
 #include "others.h"
 #include <math.h>
 #define RESET "\033[0m"
-#define color computer.logo->color
+#define color computer->logo->color
 
-struct PcRep{
+typedef struct{
   char *os;
   char *bits;
   char *name;
@@ -31,138 +31,141 @@ struct PcRep{
   char *disk;
   Logo *logo;
 
-};
+}Info;
 
-typedef struct PcRep Pc;
 int main(){
   char info[15][100];
 
-  Pc computer;
-  computer.os = getOS();
-  computer.bits = getBits();
-  computer.name = getHost();
-  computer.user = getUser();
-  computer.board = getBoard();
-  computer.kernel = getKernel();
-  computer.uptime = getUptime();
-  computer.pkg = getPacks();
-  computer.shell = getShell();
-  computer.display = getDisplay();
-  computer.DE = getDE();
-  computer.term = getTerm();
-  computer.cpu = getCpu();
-  computer.gpu = getGpu();
-  computer.memory = getMemory();
-  computer.disk = getDisk();
-  computer.logo = getLogo(computer.os);
-  int j = 0;
+  Info *computer = malloc(sizeof(Info));
+  //get all info
+  computer->os = getOS();
+  computer->bits = getBits();
+  computer->name = getHost();
+  computer->user = getUser();
+  computer->board = getBoard();
+  computer->kernel = getKernel();
+  computer->uptime = getUptime();
+  computer->pkg = getPacks();
+  computer->shell = getShell();
+  computer->display = getDisplay();
+  computer->DE = getDE();
+  computer->term = getTerm();
+  computer->cpu = getCpu();
+  computer->gpu = getGpu();
+  computer->memory = getMemory();
+  computer->disk = getDisk();
+  computer->logo = getLogo(computer->os);
+
+  int ninfo = 0;
   char *bars;
-  if(computer.user != NULL && computer.name != NULL){
-    sprintf(info[j],"%s""%s"RESET"@""%s""%s\n"RESET,color,computer.user,color,computer.name);
-    int n = strlen(computer.user)+strlen(computer.name)+2;
+
+  //print all//
+  if(computer->user != NULL && computer->name != NULL){
+    sprintf(info[ninfo],"%s""%s"RESET"@""%s""%s\n"RESET,color,computer->user,color,computer->name);
+    int n = strlen(computer->user)+strlen(computer->name)+2;
     bars = fillString('-',n);
-    j++;
-  }else if(computer.user == NULL && computer.name == NULL){
-    sprintf(info[j],"%s""Unknown"RESET"@""%s""Unknown"RESET,color,color);
+    ninfo++;
+  }else if(computer->user == NULL && computer->name == NULL){
+    sprintf(info[ninfo],"%s""Unknown"RESET"@""%s""Unknown"RESET,color,color);
     int n = 15;
     bars = fillString('-',n);
-    j++;
-  }else if(computer.user == NULL){
-    sprintf(info[j],"%s""Unkown"RESET"@""%s""%s\n"RESET,color,color,computer.name);
-    int n = strlen(computer.user)+8;
+    ninfo++;
+  }else if(computer->user == NULL){
+    sprintf(info[ninfo],"%s""Unkown"RESET"@""%s""%s\n"RESET,color,color,computer->name);
+    int n = strlen(computer->user)+8;
     bars = fillString('-',n);
-    j++;
-  }else if(computer.name == NULL){
-    sprintf(info[j],"%s""%s"RESET"@""%s""Unkown\n"RESET,color,computer.user,color);
-    int n = 8+strlen(computer.name);
+    ninfo++;
+  }else if(computer->name == NULL){
+    sprintf(info[ninfo],"%s""%s"RESET"@""%s""Unkown\n"RESET,color,computer->user,color);
+    int n = 8+strlen(computer->name);
     bars = fillString('-',n); 
-    j++;
+    ninfo++;
   }
 
-  sprintf(info[j],RESET"%s\n",bars);
-  j++;
+  sprintf(info[ninfo],RESET"%s\n",bars);
+  ninfo++;
 
-  if(computer.os != NULL){
-    sprintf(info[j],"%s""OS"RESET": %s %s\n",color,computer.os,computer.bits);
-    j++;
+  if(computer->os != NULL){
+    sprintf(info[ninfo],"%s""OS"RESET": %s %s\n",color,computer->os,computer->bits);
+    ninfo++;
   }
 
-  if(computer.board.chip != NULL && computer.board.version != NULL){
-    sprintf(info[j],"%s""MotherBoard"RESET": %s %s\n",color,computer.board.chip,computer.board.version);
-    j++;
+  if(computer->board.chip != NULL && computer->board.version != NULL){
+    sprintf(info[ninfo],"%s""MotherBoard"RESET": %s %s\n",color,computer->board.chip,computer->board.version);
+    ninfo++;
   }
 
-  if(computer.kernel != NULL){
-    sprintf(info[j],"%s""Kernel"RESET": %s\n",color,computer.kernel);
-    j++;
+  if(computer->kernel != NULL){
+    sprintf(info[ninfo],"%s""Kernel"RESET": %s\n",color,computer->kernel);
+    ninfo++;
   }
 
-  if(computer.uptime > 86400){
-    sprintf(info[j],"%s""Uptime"RESET": %ld days, %ld hours, %ld mins\n",color,computer.uptime/86400, (computer.uptime % 86400) / 3600, (computer.uptime % 3600) / 60);
-    j++;
-  }else if(computer.uptime > 3600){
-    sprintf(info[j],"%s""Uptime"RESET": %ld hours, %ld mins\n",color,(computer.uptime % 86400) / 3600, (computer.uptime % 3600) / 60);
-    j++;
-  }else if(computer.uptime == -1){
-    sprintf(info[j],"%s""Uptime"RESET": Unkown\n",color);
-    j++;
+  if(computer->uptime > 86400){
+    sprintf(info[ninfo],"%s""Uptime"RESET": %ld days, %ld hours, %ld mins\n",color,computer->uptime/86400, (computer->uptime % 86400) / 3600, (computer->uptime % 3600) / 60);
+    ninfo++;
+  }else if(computer->uptime > 3600){
+    sprintf(info[ninfo],"%s""Uptime"RESET": %ld hours, %ld mins\n",color,(computer->uptime % 86400) / 3600, (computer->uptime % 3600) / 60);
+    ninfo++;
+  }else if(computer->uptime == -1){
+    sprintf(info[ninfo],"%s""Uptime"RESET": Unkown\n",color);
+    ninfo++;
   }else{
-    sprintf(info[j],"%s""Uptime"RESET": %ld mins\n",color,(computer.uptime % 3600) / 60);
-    j++;
+    sprintf(info[ninfo],"%s""Uptime"RESET": %ld mins\n",color,(computer->uptime % 3600) / 60);
+    ninfo++;
   }
   
-  if(computer.pkg != NULL){
-    sprintf(info[j],"%s""Packages"RESET": %s\n",color,computer.pkg); 
-    j++;
+  if(computer->pkg != NULL){
+    sprintf(info[ninfo],"%s""Packages"RESET": %s\n",color,computer->pkg); 
+    ninfo++;
   }
 
-  if(computer.shell != NULL){ 
-    sprintf(info[j],"%s""Shell"RESET":%s\n",color,computer.shell);
-    j++;
+  if(computer->shell != NULL){ 
+    sprintf(info[ninfo],"%s""Shell"RESET":%s\n",color,computer->shell);
+    ninfo++;
   }
 
-  if(computer.display != NULL){
-    sprintf(info[j],"%s""Resolution"RESET": %s\n",color,computer.display);
-    j++;
+  if(computer->display != NULL){
+    sprintf(info[ninfo],"%s""Resolution"RESET": %s\n",color,computer->display);
+    ninfo++;
   }
 
-  if(computer.DE != NULL){
-    sprintf(info[j],"%s""DE"RESET": %s\n",color,computer.DE);
-    j++;
+  if(computer->DE != NULL){
+    sprintf(info[ninfo],"%s""DE"RESET": %s\n",color,computer->DE);
+    ninfo++;
   }
 
-  if(computer.term != NULL){
-    sprintf(info[j],"%s""Terminal"RESET": %s\n",color,computer.term);
-    j++;
+  if(computer->term != NULL){
+    sprintf(info[ninfo],"%s""Terminal"RESET": %s\n",color,computer->term);
+    ninfo++;
   }
 
-  if(computer.cpu != NULL){
-    sprintf(info[j],"%s""CPU"RESET"%s",color,computer.cpu);
-    j++;
+  if(computer->cpu != NULL){
+    sprintf(info[ninfo],"%s""CPU"RESET"%s",color,computer->cpu);
+    ninfo++;
   }
 
-  if(computer.gpu != NULL){
-    sprintf(info[j],"%s""GPU"RESET": %s\n",color,computer.gpu);
-    j++;
+  if(computer->gpu != NULL){
+    sprintf(info[ninfo],"%s""GPU"RESET": %s\n",color,computer->gpu);
+    ninfo++;
   }
   
-  if(computer.memory != NULL){
-    sprintf(info[j],"%s""Memory"RESET": %s\n",color,computer.memory);
-    j++;
+  if(computer->memory != NULL){
+    sprintf(info[ninfo],"%s""Memory"RESET": %s\n",color,computer->memory);
+    ninfo++;
   }
 
-  if(computer.disk != NULL){
-    sprintf(info[j],"%s""Disk"RESET": %s\n" ,color,computer.disk);
-    j++;
+  if(computer->disk != NULL){
+    sprintf(info[ninfo],"%s""Disk"RESET": %s\n" ,color,computer->disk);
+    ninfo++;
   }
 
   int y = 0;
-  for(int i = 0; i<computer.logo->height;i++){
-    while(computer.logo->logo[y] != '\0'){
-      printf("%c",computer.logo->logo[y]);
+  for(int i = 0; i<computer->logo->height;i++){
+    while(computer->logo->logo[y] != '\0'){
+      printf("%c",computer->logo->logo[y]);
       y++;
     }
-    if(i<j){
+    if(i<ninfo){
       printf("%s",info[i]);
       y++;
     }else{
@@ -173,19 +176,21 @@ int main(){
   
   printf(RESET);
 
-  free(computer.logo);
-  free(computer.memory);
-  free(computer.gpu);
-  free(computer.cpu);
-  free(computer.term);
-  free(computer.display);
-  free(computer.pkg);
-  free(computer.board.version);
-  free(computer.os);
-  free(computer.name);
-  free(computer.board.chip);
-  free(computer.kernel);
+  //free all
+  free(computer->logo);
+  free(computer->memory);
+  free(computer->gpu);
+  free(computer->cpu);
+  free(computer->term);
+  free(computer->display);
+  free(computer->pkg);
+  free(computer->board.version);
+  free(computer->os);
+  free(computer->name);
+  free(computer->board.chip);
+  free(computer->kernel);
   free(bars);
-  free(computer.bits);
-  free(computer.disk);
+  free(computer->bits);
+  free(computer->disk);
+  free(computer);
 }

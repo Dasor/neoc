@@ -13,6 +13,7 @@ typedef struct BoardRep Board;
 
 Board getBoard();
 char *getDisplay();
+char *getDisplays();
 char *getCpu();
 char *getGpu();
 char *getMemory();

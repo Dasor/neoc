@@ -93,6 +93,27 @@ char *getDisplay(){
     return resultcpy;
 }   
 
+char *getDisplays(){
+
+
+  FILE *fp;
+  char read[200];
+  char *resolution;
+  char *result = calloc(sizeof(char),1024);
+
+  if(system("xrandr >>/dev/null 2>>/dev/null") != 0){
+    printf("You need to have xrandr to get several displays\n");
+    return NULL;
+  }
+
+  fp = popen("xrandr | grep \'*\'","r"); 
+  while(fgets(read,200,fp) != NULL){
+   resolution = numUntilchar(read,' '); 
+   strcat(result,resolution);
+   strcat(result," ");
+  } 
+  return result;
+}
 
 
 
@@ -161,6 +182,7 @@ char *getGpu(){
       free(name);
       name = malloc(sizeof(char)*150);
       strcpy(name,intelgpu);
+      free(intelgpu);
     }
   }
   return name;
