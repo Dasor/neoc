@@ -68,30 +68,22 @@ Board getBoard(){
 
 char *getDisplay(){
 
-  int w;
-  int h;
   Display *display = XOpenDisplay(NULL);
   if(display == NULL){
     return NULL;
-  }
+}
 
-    Screen *screen = DefaultScreenOfDisplay(display);
+  Screen *screen = DefaultScreenOfDisplay(display);
 
-    w = WidthOfScreen(screen);
-    h = HeightOfScreen(screen);
+  int w = WidthOfScreen(screen);
+  int h = HeightOfScreen(screen);
     
-    char width [17];
-    char height [17];
-    sprintf(width,"%d",w);
-    sprintf(height,"%d",h);
 
-    char *result = strcat(width, "x");
-    result = strcat(result,height);
-    XCloseDisplay(display);
+  char *result = malloc(sizeof(char)*20);
+  sprintf(result,"%dx%d",w,h);
+  XCloseDisplay(display);
 
-    char *resultcpy = malloc(sizeof(char)*strlen(result)+1);
-    strcpy(resultcpy,result);
-    return resultcpy;
+  return result;
 }   
 
 char *getDisplays(){

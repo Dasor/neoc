@@ -4,5 +4,6 @@
 
 void printall(Info *computer);
 void freeall(Info *computer);
+void printhelp ();
 
 #endif

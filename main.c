@@ -33,7 +33,10 @@ typedef struct InfoRep Info;
 
 int main(int argc, char *argv[]){
 
-  (void)argc;
+  if(argv[1] != NULL && strcmp(argv[1],"--help") == 0){
+    printhelp();
+    return 0;
+  }
   Info *computer = malloc(sizeof(Info));
   //get all info
   computer->os = getOS();
@@ -56,7 +59,11 @@ int main(int argc, char *argv[]){
   computer->gpu = getGpu();
   computer->memory = getMemory();
   computer->disk = getDisk();
-  computer->logo = getLogo(computer->os);
+  if(argc == 3 && strcmp(argv[1],"--logo") == 0){
+    computer->logo = getLogo(argv[2]);
+  }else{
+    computer->logo = getLogo(computer->os);
+  }
 
   printall(computer);
   freeall(computer);

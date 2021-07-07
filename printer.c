@@ -153,3 +153,10 @@ void printall(Info *computer){
   free(bars);
 }
 
+void printhelp(){
+
+  printf("Options:\n --logo [distro]       Changes the logo to other distro, ej: ./neoc --logo Gentoo.\n " );
+  printf("--help                Prints this help and exits\n ");
+  printf("--multiple-displays   Prints displays separately (slower performance)\n");
+
+}
