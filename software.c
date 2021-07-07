@@ -6,7 +6,6 @@
 #define C5 "\033[1;34m"
 #define C6 "\033[1;35m"
 #define C7 "\033[1;36m"
-#define C8 "\033[1;37m"
 #define C9 "\033[1;37m"
 #define _GNU_SOURCE
 #include<string.h>
@@ -24,7 +23,6 @@
 #include <math.h>
 #define MAX 1024
 
-#ifdef __linux__
 
 
 struct PackagesRep {
@@ -113,7 +111,6 @@ char *getUser(){
     return pws->pw_name;
   
 }
-  #endif
 
 char *getKernel(){
   struct utsname *kernel = malloc(sizeof(struct utsname));
@@ -279,7 +276,7 @@ Logo *getLogo(char *string){
 
   Logo *mylogo = malloc(sizeof(Logo));  
 
-  if(strstr(string,"Arch") != NULL){
+  if(strstr(string,"Arch") != NULL || strstr(string,"arch") != NULL ){
     mylogo->logo = 
       C7"                      -`                     \0"\
       C7"                     .o+`                    \0"\
@@ -303,7 +300,7 @@ Logo *getLogo(char *string){
       ;
     mylogo->color = C7;
     mylogo->height = 19;
-  }else if(strstr(string,"Debian") != NULL){
+  }else if(strstr(string,"Debian") != NULL || strstr(string,"debian") != NULL ){
     mylogo->logo =
    C9"                                 \0"\
    C9"        _,met$$$$$gg.            \0"\
@@ -326,7 +323,7 @@ Logo *getLogo(char *string){
    ;
     mylogo->color = C2;
     mylogo->height = 18;
-  }else if(strstr(string,"Ubuntu") != NULL){
+  }else if(strstr(string,"Ubuntu") != NULL || strstr(string,"ubuntu") != NULL ){
     mylogo->logo =
       C2"            .-/+oossssoo+\\-.               \0"\
       C2"        ´:+ssssssssssssssssss+:`           \0"\
@@ -351,7 +348,7 @@ Logo *getLogo(char *string){
       ;
     mylogo->color = C2;
     mylogo->height = 20;
-  }else if(strstr(string,"Gentoo") != NULL){
+  }else if(strstr(string,"Gentoo") != NULL || strstr(string,"gentoo") != NULL ){
     mylogo->logo =
       C6"         -/oyddmdhs+:.                 \0"\
       C6"     -o"C9"dNMMMMMMMMNNmhy+"C6"-`              \0"\
@@ -374,7 +371,7 @@ Logo *getLogo(char *string){
       ;
     mylogo->color = C6;
     mylogo->height =18;
-  }else if(strstr(string,"Fedora") != NULL){
+  }else if(strstr(string,"Fedora") != NULL || strstr(string,"fedora") != NULL ){
     mylogo->logo =
       C5"          /:-------------:\\           \0"\
       C5"       :-------------------::         \0"\
@@ -399,28 +396,27 @@ Logo *getLogo(char *string){
   }
   else{
     mylogo->logo =
-      "                                                        \0"\
-      "                                                        \0"\
-      "                                                        \0"\
-      "                                                        \0"\
-      "                                                        \0"\
-      "                                                        \0"\
-      "                                                        \0"\
-      "                                                        \0"\
-      "                                                        \0"\
-      "                                                        \0"\
-      "                                                        \0"\
-      "                                                        \0"\
-      "                                                        \0"\
-      "                                                        \0"\
-      "                                                        \0"\
-      "                                                        \0"\
-      "                                                        \0"\
-      "                                                        \0"\
-      "                                                        \0"\
-      ;
-      mylogo->color = C9;
-      mylogo->height = 19;
+C4 "          ________               \0"\
+C4 "       _jgN########Ngg_          \0"\
+C4 "     _N##N@@\"\"  \"\"9NN##Np_       \0"\
+C4 "    d###P            N####p      \0"\
+C4 "    \"^^\"              T####      \0"\
+C4 "                      d###P      \0"\
+C4 "                   _g###@F       \0"\
+C4 "                _gN##@P          \0"\
+C4 "              gN###F\"            \0"\
+C4 "             d###F               \0"\
+C4 "            0###F                \0"\
+C4 "            0###F                \0"\
+C4 "            0###F                \0"\
+C4 "            \"NN@'                \0"\
+C4 "                                 \0"\
+C4 "             ___                 \0"\
+C4 "            q###r                \0"\
+C4 "             \"\"                  \0"\
+ ;
+      mylogo->color = C4;
+      mylogo->height = 18;
   }
   return mylogo;
 }
