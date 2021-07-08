@@ -2,6 +2,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include "logos.h"
 #include "hardware.h"
 #include "software.h"
 #include "main.h"

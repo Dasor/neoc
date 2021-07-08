@@ -5,6 +5,7 @@
 #include "software.h"
 #include "hardware.h"
 #include "others.h"
+#include "logos.h"
 
 struct InfoRep{
   char *os;
