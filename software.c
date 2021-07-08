@@ -25,53 +25,36 @@
 
 
 
-struct PackagesRep {
+typedef struct{
 
 int npacks;
 char *manager;
 
-};
+}Pack;
 
-typedef struct PackagesRep Pack;
-
-struct LogoRep {
+typedef struct{
 
   int height;
   char *logo;
   char *color;
 
-};
-
-typedef struct LogoRep Logo;
+}Logo;
 
 char *getOS(){
   
   FILE *fpointer = fopen ("/etc/os-release","r");
   char read [50];
-  char *line;
   char *result;
-  char *tmp;
-  char *token = calloc(sizeof(char),12);
 
   if ( fpointer != NULL ){
-    while (strcmp(token,"PRETTY_NAME") != 0 && fgets(read, 50 , fpointer) != NULL){
-      memcpy(token,read,11);
-    }
-
-    fclose(fpointer);
-    free(token);
-
-    }else{
+    while (fgets(read, 50 , fpointer) != NULL && strstr(read,"PRETTY_NAME") == NULL);
+  }else{
       printf("cannot read OS\n");
       return NULL;
     }
 
-    line = malloc(sizeof(char)*strlen(read)+1);
-    strcpy(line,read);
-    tmp = fixString(line,'"','"',0);
-    result = malloc(sizeof(char)*strlen(tmp)+1);
-    strcpy(result,tmp);
-    free(tmp);
+    fclose(fpointer);
+    result = fixString(read,'"','"',1);
     return result;
 }
 
@@ -232,7 +215,6 @@ char *getShell(){
     shell = strcat(shell,version);
     pclose(fp);
     free(version);
-    return shell;
   }
 
   return shell;
@@ -258,7 +240,7 @@ char *getTerm(){
   fgets(tmp,MAX,fp);
   if(tmp == NULL){
     printf("Cannot read Terminal\n");
-    return "Unknown";
+    return NULL;
   }
   x = strlen(tmp);
   char *result = malloc(sizeof(char)*x+1);
@@ -302,25 +284,25 @@ Logo *getLogo(char *string){
     mylogo->height = 19;
   }else if(strstr(string,"Debian") != NULL || strstr(string,"debian") != NULL ){
     mylogo->logo =
-   C9"                                 \0"\
-   C9"        _,met$$$$$gg.            \0"\
-   C9"     ,g$$$$$$$$$$$$$$$P.         \0"\
-   C9"   ,g$$P\"     \"\"\"Y$$.\".          \0"\
-   C9"  ,$$P'              `$$$.       \0"\
-   C9" ',$$P       ,ggs.     `$$b:     \0"\
-   C9" `d$$'     ,$P\"' "C2"  ."C9"    $$$      \0"\
-   C9"  $$P      d$'    "C2" , "C9"   $$P      \0"\
-   C9"  $$:      $$.  "C2" - "C9"   ,d$$'      \0"\
-   C9"  $$;      Y$b._   _,d$P'        \0"\
-   C9"  Y$$.    "C2"`."C9"`\"Y$$$$P\"'           \0"\
-   C9"  `$$b     "C2" \"-.__ "C9"               \0"\
-   C9"   `Y$$                          \0"\
-   C9"    `Y$$.                        \0"\
-   C9"      `$$b.  		         \0"\
-   C9"         `Y$$b.                   \0"\
-   C9"           `\"Y$b._               \0"\
-   C9"               `\"\"\"              \0"\
-   ;
+      C9"                                 \0"\
+      C9"        _,met$$$$$gg.            \0"\
+      C9"     ,g$$$$$$$$$$$$$$$P.         \0"\
+      C9"   ,g$$P\"     \"\"\"Y$$.\".          \0"\
+      C9"  ,$$P'              `$$$.       \0"\
+      C9" ',$$P       ,ggs.     `$$b:     \0"\
+      C9" `d$$'     ,$P\"' "C2"  ."C9"    $$$      \0"\
+      C9"  $$P      d$'    "C2" , "C9"   $$P      \0"\
+      C9"  $$:      $$.  "C2" - "C9"   ,d$$'      \0"\
+      C9"  $$;      Y$b._   _,d$P'        \0"\
+      C9"  Y$$.    "C2"`."C9"`\"Y$$$$P\"'           \0"\
+      C9"  `$$b     "C2" \"-.__ "C9"               \0"\
+      C9"   `Y$$                          \0"\
+      C9"    `Y$$.                        \0"\
+      C9"      `$$b.  		         \0"\
+      C9"         `Y$$b.                   \0"\
+      C9"           `\"Y$b._               \0"\
+      C9"               `\"\"\"              \0"\
+      ;
     mylogo->color = C2;
     mylogo->height = 18;
   }else if(strstr(string,"Ubuntu") != NULL || strstr(string,"ubuntu") != NULL ){
@@ -396,25 +378,25 @@ Logo *getLogo(char *string){
   }
   else{
     mylogo->logo =
-C4 "          ________               \0"\
-C4 "       _jgN########Ngg_          \0"\
-C4 "     _N##N@@\"\"  \"\"9NN##Np_       \0"\
-C4 "    d###P            N####p      \0"\
-C4 "    \"^^\"              T####      \0"\
-C4 "                      d###P      \0"\
-C4 "                   _g###@F       \0"\
-C4 "                _gN##@P          \0"\
-C4 "              gN###F\"            \0"\
-C4 "             d###F               \0"\
-C4 "            0###F                \0"\
-C4 "            0###F                \0"\
-C4 "            0###F                \0"\
-C4 "            \"NN@'                \0"\
-C4 "                                 \0"\
-C4 "             ___                 \0"\
-C4 "            q###r                \0"\
-C4 "             \"\"                  \0"\
- ;
+      C4 "          ________               \0"\
+      C4 "       _jgN########Ngg_          \0"\
+      C4 "     _N##N@@\"\"  \"\"9NN##Np_       \0"\
+      C4 "    d###P            N####p      \0"\
+      C4 "    \"^^\"              T####      \0"\
+      C4 "                      d###P      \0"\
+      C4 "                   _g###@F       \0"\
+      C4 "                _gN##@P          \0"\
+      C4 "              gN###F\"            \0"\
+      C4 "             d###F               \0"\
+      C4 "            0###F                \0"\
+      C4 "            0###F                \0"\
+      C4 "            0###F                \0"\
+      C4 "            \"NN@'                \0"\
+      C4 "                                 \0"\
+      C4 "             ___                 \0"\
+      C4 "            q###r                \0"\
+      C4 "             \"\"                  \0"\
+      ;
       mylogo->color = C4;
       mylogo->height = 18;
   }

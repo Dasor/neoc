@@ -18,10 +18,11 @@ void freeall(Info *computer){
   free(computer->term);
   free(computer->display);
   free(computer->pkg);
-  free(computer->board.version);
+  free(computer->board->version);
   free(computer->os);
   free(computer->name);
-  free(computer->board.chip);
+  free(computer->board->chip);
+  free(computer->board);
   free(computer->kernel);
   free(computer->bits);
   free(computer->disk);
@@ -33,29 +34,19 @@ void printall(Info *computer){
   int ninfo = 0;  
   char info[15][100];
   char *bars;
+  int numofbars;
 
   //print all//
   if(computer->user != NULL && computer->name != NULL){
     sprintf(info[ninfo],"%s""%s"RESET"@""%s""%s\n"RESET,color,computer->user,color,computer->name);
-    int n = strlen(computer->user)+strlen(computer->name)+2;
-    bars = fillString('-',n);
-    ninfo++;
-  }else if(computer->user == NULL && computer->name == NULL){
-    sprintf(info[ninfo],"%s""Unknown"RESET"@""%s""Unknown"RESET,color,color);
-    int n = 15;
-    bars = fillString('-',n);
-    ninfo++;
-  }else if(computer->user == NULL){
-    sprintf(info[ninfo],"%s""Unkown"RESET"@""%s""%s\n"RESET,color,color,computer->name);
-    int n = strlen(computer->user)+8;
-    bars = fillString('-',n);
-    ninfo++;
-  }else if(computer->name == NULL){
-    sprintf(info[ninfo],"%s""%s"RESET"@""%s""Unkown\n"RESET,color,computer->user,color);
-    int n = 8+strlen(computer->name);
-    bars = fillString('-',n); 
-    ninfo++;
+    numofbars = strlen(computer->user)+strlen(computer->name)+2;
+  }else{
+    sprintf(info[ninfo],"Unknown@Unknown");
+    numofbars = 15;
   }
+  
+  bars = fillString('-',numofbars);
+  ninfo++;
 
   sprintf(info[ninfo],RESET"%s\n",bars);
   ninfo++;
@@ -65,8 +56,8 @@ void printall(Info *computer){
     ninfo++;
   }
 
-  if(computer->board.chip != NULL && computer->board.version != NULL){
-    sprintf(info[ninfo],"%s""MotherBoard"RESET": %s %s\n",color,computer->board.chip,computer->board.version);
+  if(computer->board != NULL){
+    sprintf(info[ninfo],"%s""MotherBoard"RESET": %s %s\n",color,computer->board->chip,computer->board->version);
     ninfo++;
   }
 
@@ -115,7 +106,7 @@ void printall(Info *computer){
   }
 
   if(computer->cpu != NULL){
-    sprintf(info[ninfo],"%s""CPU"RESET"%s",color,computer->cpu);
+    sprintf(info[ninfo],"%s""CPU"RESET":%s\n",color,computer->cpu);
     ninfo++;
   }
 

@@ -2,15 +2,13 @@
 #define SOFTWARE_H
 
 
-struct LogoRep {
+typedef struct{
 
   int height;
   char *logo;
   char *color;
 
-};
-
-typedef struct LogoRep Logo;
+}Logo;
 
 char *getOS();
 char *getBits();

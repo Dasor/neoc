@@ -11,7 +11,7 @@ struct InfoRep{
   char *bits;
   char *name;
   char *user;
-  Board board;
+  Board *board;
   char *kernel;
   long uptime;
   char *pkg;

@@ -2,16 +2,15 @@
 #define HARDWARE_H
 
 
-struct BoardRep{
+typedef struct{
   
   char *chip;
   char *version;
 
-};
+}Board;
 
-typedef struct BoardRep Board;
 
-Board getBoard();
+Board *getBoard();
 char *getDisplay();
 char *getDisplays();
 char *getCpu();

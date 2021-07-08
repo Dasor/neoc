@@ -3,66 +3,62 @@
 #include <X11/Xlib.h>
 #include <pci/pci.h>
 #include <X11/Xatom.h>
-#include<string.h>
-#include<stdio.h>
-#include<stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <limits.h>
 #include "others.h"
 #include "intelgpu.h"
+#define GB 1000000000
+#define KB 1000000
+#define BIG_SIZE 1024
+#define MEDIUM_SIZE 256
+#define SMALL_SIZE 20
 
-struct BoardRep{
+typedef struct{
   
   char *chip;
   char *version;
 
-};
-
-typedef struct BoardRep Board;
+}Board;
 
 
-
-Board getBoard(){
- #ifdef __linux__
+Board *getBoard(){
   
     FILE *fpointer = fopen ("/sys/devices/virtual/dmi/id/board_name","r");
-    Board result;
-    result.chip = calloc(sizeof(char),256); /* or other suitable maximum line size */
+    Board *result = malloc(sizeof(Board));
+    result->chip = malloc(sizeof(char)*MEDIUM_SIZE); /* or other suitable maximum line size */
 
     if ( fpointer != NULL ){
-      fgets(result.chip, 256 , fpointer);
+      fgets(result->chip, MEDIUM_SIZE , fpointer);
     }else{
       printf("cannot read Board");
-      result.chip = NULL; 
-      result.version = NULL;
-      return result;
+      free(result);
+      return NULL;
     }
 
 
-    result.chip[strlen(result.chip)-1] = '\0'; //deletes \n //
-
+    result->chip[strlen(result->chip)-1] = '\0'; //deletes \n //
     fclose(fpointer);
 
     fpointer = fopen ("/sys/devices/virtual/dmi/id/board_version","r");
-    result.version = calloc(sizeof(char),4); //I suppose there can´t be a bigger version that x.x// 
+    result->version = malloc(sizeof(char)*4); //I suppose there can´t be a bigger version that x.x// 
     
     if (fpointer != NULL ){
-      fgets(result.version, 4 , fpointer);
+      fgets(result->version, 4 , fpointer);
     }else{
-      result.chip = NULL; 
-      result.version = NULL;
       printf("cannot read Board");
-      return result;
+      free(result);
+      return NULL;
     }
 
-    if(strcmp(result.version, "x.x") == 0 || strcmp(result.version,"\n") == 0){
-      result.version[0] = '\0';
+    if(strcmp(result->version, "x.x") == 0 || strcmp(result->version,"\n") == 0){
+      result->version[0] = '\0';
     }  
     fclose(fpointer);
    
-  #endif
-
-      return result;
+    return result;
     
 }
 
@@ -79,7 +75,7 @@ char *getDisplay(){
   int h = HeightOfScreen(screen);
     
 
-  char *result = malloc(sizeof(char)*20);
+  char *result = malloc(sizeof(char)*SMALL_SIZE);
   sprintf(result,"%dx%d",w,h);
   XCloseDisplay(display);
 
@@ -90,9 +86,9 @@ char *getDisplays(){
 
 
   FILE *fp;
-  char read[200];
+  char read[MEDIUM_SIZE];
   char *resolution;
-  char *result = calloc(sizeof(char),1024);
+  char *result = calloc(sizeof(char),BIG_SIZE);
 
   if(system("xrandr >>/dev/null 2>>/dev/null") != 0){
     printf("You need to have xrandr to get several displays\n");
@@ -100,7 +96,7 @@ char *getDisplays(){
   }
 
   fp = popen("xrandr | grep \'*\'","r"); 
-  while(fgets(read,200,fp) != NULL){
+  while(fgets(read,MEDIUM_SIZE,fp) != NULL){
    resolution = numUntilchar(read,' '); 
    strcat(result,resolution);
    strcat(result," ");
@@ -115,26 +111,17 @@ char *getDisplays(){
 char *getCpu(){
 
   FILE *fp = fopen("/proc/cpuinfo","r");
-  char *token = calloc(sizeof(char),11);
-  char read [1024];
+  char read [BIG_SIZE];
   if(fp != NULL){
-    while(strcmp(token,"model name") != 0 && fgets(read,1024,fp) != NULL){
-      memcpy(token,read,10);
-  }
-    fclose(fp);
-    free(token);
+    while(fgets(read,BIG_SIZE,fp) != NULL && strstr(read,"model name") == NULL );
   }else{
     printf("Cannot read Cpu\n");
     return "NULL";
   }
 
-  char *tmp = malloc(sizeof(char)*strlen(read)+1);
-  strcpy(tmp,read);
-  char *result = strchr(tmp,':');
-  char *resultcpy = malloc(sizeof(char)*strlen(result)+1);
-  strcpy(resultcpy,result);
-  free(tmp);
-  return resultcpy;
+  fclose(fp);
+  char *result = fixString(read,':','\n',1); 
+  return result;
 
 }
 
@@ -142,8 +129,8 @@ char *getGpu(){
 
   struct pci_access *pacc;
   struct pci_dev *dev;
-  char namebuf[1024];
-  char *name = malloc(sizeof(char)*150);
+  char namebuf[BIG_SIZE];
+  char *name = malloc(sizeof(char)*MEDIUM_SIZE);
   char *class;
   char *intelgpu; 
   int i = 0;
@@ -175,7 +162,7 @@ char *getGpu(){
     intelgpu = find_gpu(id);
     if(intelgpu != NULL){
       free(name);
-      name = malloc(sizeof(char)*150);
+      name = malloc(sizeof(char)*MEDIUM_SIZE);
       strcpy(name,intelgpu);
       free(intelgpu);
     }
@@ -216,8 +203,8 @@ char *getMemory(){
     total_memory = total / 1024;
     int percentage = (int) (100 * (used_memory / (double) total_memory));
 
-    char *memory = malloc(sizeof(char)*150);
-    snprintf(memory, 150, "%dMiB / %dMiB (%d%%)", used_memory, total_memory, percentage);
+    char *memory = malloc(sizeof(char)*MEDIUM_SIZE);
+    snprintf(memory, MEDIUM_SIZE, "%dMiB / %dMiB (%d%%)", used_memory, total_memory, percentage);
 
     return memory;
 
@@ -230,7 +217,7 @@ char *getDisk(){
   double free;
   double used;
   struct statvfs vfs;
-  char *disk = malloc(sizeof(char)*150);
+  char *disk = malloc(sizeof(char)*MEDIUM_SIZE);
   state = statvfs("/",&vfs);
   if(state != 0){
     return NULL;
@@ -240,10 +227,10 @@ char *getDisk(){
   free = ((double)vfs.f_bfree * block_size);
   used = (((double)vfs.f_blocks - vfs.f_bavail) * block_size);
   double percentaje = (used / total) * 100;
-  if(free > 1000000000){
-    snprintf(disk,150, "%.1lfGB / %.1lfGB (%.0lf%%)",free/1000000000,total/1000000000,percentaje);
+  if(free > GB ){
+    snprintf(disk,MEDIUM_SIZE, "%.1lfGB / %.1lfGB (%.0lf%%)",free/GB, total/GB, percentaje);
   }else{
-    snprintf(disk,150, "%1.lfKB / %1.ffGB (%.0lf%%)",free/1000000,total/1000000000,percentaje);
+    snprintf(disk,MEDIUM_SIZE, "%1.lfKB / %1.ffGB (%.0lf%%)",free/KB,total/GB,percentaje);
   }
   return disk;
 

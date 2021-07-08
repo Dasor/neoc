@@ -53,4 +53,4 @@ Here are more examples of how `neoc` looks on different `PC's`.
 # 4. Bugs or improvements
 There are probably many bugs that I'm not aware of so, if you find any bug or think of any improment feel free to open a pull request.
 
-I would like to thank [DrNoob](https://github.com/Dr-Noob) for his help, running `neoc` in many different PC's he have access to, which makes it easier to debug and check the correctness of `neoc` he also made many suggestions and helped me with some topics I did not have any idea about .
+I would like to thank [DrNoob](https://github.com/Dr-Noob) for his help, running `neoc` in many different PC's he has access to, which makes it easier to debug and check the correctness of `neoc` he also made many suggestions and helped me with some topics I did not have any idea about .
