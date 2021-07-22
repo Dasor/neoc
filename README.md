@@ -14,7 +14,7 @@
 # 1. Introduction
 neoc is a fairly simple program made by a future cs college student just to practice his c skills. It is better than neofetch in a couple of things, firstly it is faster and secondly it also displays disk info.
 
-It also has some downsides, neoc doesn't show any theme related info it just shows the desktop enviroment. Also neoc is missing some logos as well as some package managers that will be added as soon as possible but trying to keep the programn as fast as posible. Lastly, neoc is currently only working on linux thought I have plans to make it work on at least windows and maybe mac.
+It also has some downsides, neoc doesn't show any theme related info it just shows the desktop enviroment. Also neoc is missing some logos as well as some package managers that will be added as soon as possible but trying to keep the programn as fast as posible. Lastly, neoc only works on linux.
 
 # 2. Installating libraries
 To run neoc you will need 2 libraries libx11 and libpci so this are some examples on how to install them.
