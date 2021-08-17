@@ -7,6 +7,7 @@
 #include "software.h"
 #include "main.h"
 #include "others.h"
+#define WHITE "\033[37m"
 #define RESET "\033[0m"
 #define color computer->logo->color
 
@@ -39,7 +40,7 @@ void printall(Info *computer){
 
   //print all//
   if(computer->user != NULL && computer->name != NULL){
-    sprintf(info[ninfo],"%s""%s"RESET"@""%s""%s\n"RESET,color,computer->user,color,computer->name);
+    sprintf(info[ninfo],"%s""%s"WHITE"@""%s""%s\n"WHITE,color,computer->user,color,computer->name);
     numofbars = strlen(computer->user)+strlen(computer->name)+2;
   }else{
     sprintf(info[ninfo],"Unknown@Unknown");
@@ -49,80 +50,80 @@ void printall(Info *computer){
   bars = fillString('-',numofbars);
   ninfo++;
 
-  sprintf(info[ninfo],RESET"%s\n",bars);
+  sprintf(info[ninfo],WHITE"%s\n",bars);
   ninfo++;
 
   if(computer->os != NULL){
-    sprintf(info[ninfo],"%s""OS"RESET": %s %s\n",color,computer->os,computer->bits);
+    sprintf(info[ninfo],"%s""OS"WHITE": %s %s\n",color,computer->os,computer->bits);
     ninfo++;
   }
 
   if(computer->board != NULL){
-    sprintf(info[ninfo],"%s""MotherBoard"RESET": %s %s\n",color,computer->board->chip,computer->board->version);
+    sprintf(info[ninfo],"%s""MotherBoard"WHITE": %s %s\n",color,computer->board->chip,computer->board->version);
     ninfo++;
   }
 
   if(computer->kernel != NULL){
-    sprintf(info[ninfo],"%s""Kernel"RESET": %s\n",color,computer->kernel);
+    sprintf(info[ninfo],"%s""Kernel"WHITE": %s\n",color,computer->kernel);
     ninfo++;
   }
 
   if(computer->uptime > 86400){
-    sprintf(info[ninfo],"%s""Uptime"RESET": %ld days, %ld hours, %ld mins\n",color,computer->uptime/86400, (computer->uptime % 86400) / 3600, (computer->uptime % 3600) / 60);
+    sprintf(info[ninfo],"%s""Uptime"WHITE": %ld days, %ld hours, %ld mins\n",color,computer->uptime/86400, (computer->uptime % 86400) / 3600, (computer->uptime % 3600) / 60);
     ninfo++;
   }else if(computer->uptime > 3600){
-    sprintf(info[ninfo],"%s""Uptime"RESET": %ld hours, %ld mins\n",color,(computer->uptime % 86400) / 3600, (computer->uptime % 3600) / 60);
+    sprintf(info[ninfo],"%s""Uptime"WHITE": %ld hours, %ld mins\n",color,(computer->uptime % 86400) / 3600, (computer->uptime % 3600) / 60);
     ninfo++;
   }else if(computer->uptime == -1){
-    sprintf(info[ninfo],"%s""Uptime"RESET": Unkown\n",color);
+    sprintf(info[ninfo],"%s""Uptime"WHITE": Unkown\n",color);
     ninfo++;
   }else{
-    sprintf(info[ninfo],"%s""Uptime"RESET": %ld mins\n",color,(computer->uptime % 3600) / 60);
+    sprintf(info[ninfo],"%s""Uptime"WHITE": %ld mins\n",color,(computer->uptime % 3600) / 60);
     ninfo++;
   }
   
   if(computer->pkg != NULL){
-    sprintf(info[ninfo],"%s""Packages"RESET": %s\n",color,computer->pkg); 
+    sprintf(info[ninfo],"%s""Packages"WHITE": %s\n",color,computer->pkg); 
     ninfo++;
   }
 
   if(computer->shell != NULL){ 
-    sprintf(info[ninfo],"%s""Shell"RESET":%s\n",color,computer->shell);
+    sprintf(info[ninfo],"%s""Shell"WHITE":%s\n",color,computer->shell);
     ninfo++;
   }
 
   if(computer->display != NULL){
-    sprintf(info[ninfo],"%s""Resolution"RESET": %s\n",color,computer->display);
+    sprintf(info[ninfo],"%s""Resolution"WHITE": %s\n",color,computer->display);
     ninfo++;
   }
 
   if(computer->DE != NULL){
-    sprintf(info[ninfo],"%s""DE"RESET": %s\n",color,computer->DE);
+    sprintf(info[ninfo],"%s""DE"WHITE": %s\n",color,computer->DE);
     ninfo++;
   }
 
   if(computer->term != NULL){
-    sprintf(info[ninfo],"%s""Terminal"RESET": %s\n",color,computer->term);
+    sprintf(info[ninfo],"%s""Terminal"WHITE": %s\n",color,computer->term);
     ninfo++;
   }
 
   if(computer->cpu != NULL){
-    sprintf(info[ninfo],"%s""CPU"RESET":%s\n",color,computer->cpu);
+    sprintf(info[ninfo],"%s""CPU"WHITE":%s\n",color,computer->cpu);
     ninfo++;
   }
 
   if(computer->gpu != NULL){
-    sprintf(info[ninfo],"%s""GPU"RESET": %s\n",color,computer->gpu);
+    sprintf(info[ninfo],"%s""GPU"WHITE": %s\n",color,computer->gpu);
     ninfo++;
   }
   
   if(computer->memory != NULL){
-    sprintf(info[ninfo],"%s""Memory"RESET": %s\n",color,computer->memory);
+    sprintf(info[ninfo],"%s""Memory"WHITE": %s\n",color,computer->memory);
     ninfo++;
   }
 
   if(computer->disk != NULL){
-    sprintf(info[ninfo],"%s""Disk"RESET": %s\n" ,color,computer->disk);
+    sprintf(info[ninfo],"%s""Disk"WHITE": %s\n" ,color,computer->disk);
     ninfo++;
   }
 
