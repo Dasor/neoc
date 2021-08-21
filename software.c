@@ -203,9 +203,12 @@ char *getShell(){
 }
 
 char *getDE(){
-  char *result = getenv("XDG_CURRENT_DESKTOP");
-  if (result == NULL || strcmp(result,"") == 0){
-    return NULL;
+  char *result = getenv("XDG_SESSION_DESKTOP");
+  if(result == NULL || strcmp(result,"") == 0){
+    result = getenv("XDG_CURRENT_DESKTOP");
+    if (result == NULL || strcmp(result,"") == 0){
+      return NULL;
+    }
   }
   if(strchr(result,':') != NULL ){
    result = strchr(result,':');
