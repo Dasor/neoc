@@ -215,7 +215,6 @@ char *getDisk(){
   int block_size;
   double total; 
   double free;
-  double used;
   struct statvfs vfs;
   char *disk = malloc(sizeof(char)*MEDIUM_SIZE);
   state = statvfs("/",&vfs);
@@ -225,8 +224,7 @@ char *getDisk(){
   block_size = vfs.f_bsize;
   total = ((double)vfs.f_blocks * block_size);
   free = ((double)vfs.f_bfree * block_size);
-  used = (((double)vfs.f_blocks - vfs.f_bavail) * block_size);
-  double percentaje = (used / total) * 100;
+  double percentaje = ( ((total-free)/GB) / (total/GB) ) * 100;
   if(free > GB ){
     snprintf(disk,MEDIUM_SIZE, "%.1lfGB / %.1lfGB (%.0lf%%)",free/GB, total/GB, percentaje);
   }else{
