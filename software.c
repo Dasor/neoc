@@ -222,26 +222,22 @@ char *getTerm(){
   char tmp[MAX];
   int x;
   char *result;
-  fp = popen ("ps -o comm= -p \"$(($(ps -o ppid= -p \"$(($(ps -o sid= -p \"$$\")))\")))\" 2>/dev/null", "r");
-  if (fp != NULL){
+  fp = popen ("ps -o comm= -p 2>/dev/null \"$(($(ps -o ppid= -p 2>/dev/null \"$(($(ps -o sid= -p 2> /dev/null \"$$\")))\")))\"", "r");
     fgets(tmp,MAX,fp);
-    if(tmp == NULL){
-      printf("Cannot read Terminal\n");
-      return NULL;
+    if(tmp == NULL || tmp[0] == '\001'){
+      char *pointer = strtok(getenv("TERM"),"-");
+      result = malloc(sizeof(char)*strlen(pointer)+1);
+      strcpy(result,pointer);
+    }else{
+      x = strlen(tmp);
+      result = malloc(sizeof(char)*x+1);
+      strcpy(result,tmp);
+      if(result[x-2] == '-'){//weird gnome terminal bug
+        result[x-2] = '\0';
+      }else{//deleting \n //
+        result[x-1] = '\0';
+      }
     }
-    x = strlen(tmp);
-    result = malloc(sizeof(char)*x+1);
-    strcpy(result,tmp);
-    if(result[x-2] == '-'){//weird gnome terminal bug
-      result[x-2] = '\0';
-    }else{//deleting \n //
-      result[x-1] = '\0';
-    }
-    pclose(fp);
-  }else{
-    char *pointer = strtok(getenv("TERM"),"-");
-    result = malloc(sizeof(char)*strlen(pointer)+1);
-    strcpy(result,pointer);
-  }
+  pclose(fp);
   return result;
 }
