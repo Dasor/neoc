@@ -240,7 +240,7 @@ char *getTerm(){
     pclose(fp);
   }else{
     char *pointer = strtok(getenv("TERM"),"-");
-    result = malloc(sizeof(char)*strlen(freethispointer)+1);
+    result = malloc(sizeof(char)*strlen(pointer)+1);
     strcpy(result,pointer);
   }
   return result;
