@@ -17,13 +17,13 @@
 
 typedef struct{
 
-int npacks;
-char *manager;
+  int npacks;
+  char *manager;
 
 }Pack;
 
 char *getOS(){
-  
+
   FILE *fpointer = fopen ("/etc/os-release","r");
   char read [50];
   char *result;
@@ -31,13 +31,13 @@ char *getOS(){
   if ( fpointer != NULL ){
     while (fgets(read, 50 , fpointer) != NULL && strstr(read,"PRETTY_NAME") == NULL);
   }else{
-      printf("cannot read OS\n");
-      return NULL;
-    }
+    printf("cannot read OS\n");
+    return NULL;
+  }
 
-    fclose(fpointer);
-    result = fixString(read,'"','"',1);
-    return result;
+  fclose(fpointer);
+  result = fixString(read,'"','"',1);
+  return result;
 }
 
 char *getBits(){
@@ -50,12 +50,12 @@ char *getBits(){
   char *result = malloc(sizeof(char)*strlen(bits->machine)+1);
   strcpy(result,bits->machine);
   free(bits);
-  return result;   
+  return result;
 
 
 }
 char *getHost(){
-  char *host = calloc(sizeof(char),HOST_NAME_MAX);  
+  char *host = calloc(sizeof(char),HOST_NAME_MAX);
   if(gethostname(host, HOST_NAME_MAX) != 0){
     printf("Cannot read hostname\n");
     return NULL;
@@ -70,11 +70,11 @@ char *getUser(){
   if(( pws = getpwuid(geteuid())) == NULL){
     printf("cannot read user\n");
     return NULL;
-    }
+  }
 
-    
-    return pws->pw_name;
-  
+
+  return pws->pw_name;
+
 }
 
 char *getKernel(){
@@ -87,7 +87,7 @@ char *getKernel(){
   strcpy(result,kernel->release);
   free(kernel);
   return result;
-  
+
 }
 
 long getUptime(){
@@ -107,7 +107,7 @@ long getUptime(){
 
 char *getPacks(){
 
-//TO DO: read more pkg managers like slackware and gentoo//
+  //TO DO: read more pkg managers like slackware and gentoo//
 
   FILE *fp;
   char packs[6];
@@ -121,11 +121,11 @@ char *getPacks(){
     pkg[j].manager = "pacman";
     pkg[j].npacks = NumOfPackages("/var/lib/pacman/local") - 1;
     j++;
-  }if(stat("/var/lib/snapd/snaps",&stats) == 0 && S_ISDIR(stats.st_mode) == 1){ 
+  }if(stat("/var/lib/snapd/snaps",&stats) == 0 && S_ISDIR(stats.st_mode) == 1){
     pkg[j].manager = "snap";
     pkg[j].npacks = NumOfPackages("/snap") - 1;
     j++;
-  }if(stat("/var/lib/dpkg",&stats) == 0 && S_ISDIR(stats.st_mode) == 1){ 
+  }if(stat("/var/lib/dpkg",&stats) == 0 && S_ISDIR(stats.st_mode) == 1){
     pkg[j].manager = "dpkg";
     fp = fopen("/var/lib/dpkg/status","r");
     if(fp != NULL){
@@ -144,7 +144,7 @@ char *getPacks(){
     pkg[j].npacks = atoi(fgets(packs,6,fp));
     pclose(fp);
     j++;
-  }if(stat("/var/lib/flatpak/app",&stats) == 0 && S_ISDIR(stats.st_mode) == 1){ 
+  }if(stat("/var/lib/flatpak/app",&stats) == 0 && S_ISDIR(stats.st_mode) == 1){
     pkg[j].manager = "flatpak";
     pkg[j].npacks = NumOfPackages("/var/lib/flatpak/app");
     j++;
@@ -171,15 +171,15 @@ char *getPacks(){
       result = strcat(result,"), ");
     }
   }
-  
+
   free(pkg);
   return result;
-  
+
 }
 
 char *getShell(){
 
-  char *shell; 
+  char *shell;
   if((shell = strrchr(getenv("SHELL"),'/')) == NULL){
     printf("Cannot read shell\n");
     return NULL;
@@ -211,8 +211,8 @@ char *getDE(){
     }
   }
   if(strchr(result,':') != NULL ){
-   result = strchr(result,':');
-   result++;
+    result = strchr(result,':');
+    result++;
   }
   return result;
 }
@@ -221,21 +221,27 @@ char *getTerm(){
   FILE *fp;
   char tmp[MAX];
   int x;
-  fp = popen ("ps -o comm= -p \"$(($(ps -o ppid= -p \"$(($(ps -o sid= -p \"$$\")))\")))\"", "r");
-  fgets(tmp,MAX,fp);
-  if(tmp == NULL){
-    printf("Cannot read Terminal\n");
-    return NULL;
+  char *result;
+  fp = popen ("ps -o comm= -p \"$(($(ps -o ppid= -p \"$(($(ps -o sid= -p \"$$\")))\")))\" 2>/dev/null", "r");
+  if (fp != NULL){
+    fgets(tmp,MAX,fp);
+    if(tmp == NULL){
+      printf("Cannot read Terminal\n");
+      return NULL;
+    }
+    x = strlen(tmp);
+    result = malloc(sizeof(char)*x+1);
+    strcpy(result,tmp);
+    if(result[x-2] == '-'){//weird gnome terminal bug
+      result[x-2] = '\0';
+    }else{//deleting \n //
+      result[x-1] = '\0';
+    }
+    pclose(fp);
+  }else{
+    char *pointer = strtok(getenv("TERM"),"-");
+    result = malloc(sizeof(char)*strlen(freethispointer)+1);
+    strcpy(result,pointer);
   }
-  x = strlen(tmp);
-  char *result = malloc(sizeof(char)*x+1);
-  strcpy(result,tmp);
-  if(result[x-2] == '-'){//weird gnome terminal bug
-    result[x-2] = '\0';
-  }else{//deleting \n //
-    result[x-1] = '\0';
-  }
-  pclose(fp);
   return result;
 }
-
