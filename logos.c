@@ -139,8 +139,33 @@ Logo *getLogo(char *string){
       ;
     mylogo->color = C5;
     mylogo->height = 17;
-  }
-  else{
+  }else if(strstr(string,"Alpine") != NULL || strstr(string,"fedora") != NULL ){
+    mylogo->logo=
+
+    C7"         .hddddddddddddddddddddddh.          \0"\
+    C7"        :dddddddddddddddddddddddddd:         \0"\
+    C7"       /dddddddddddddddddddddddddddd/        \0"\
+    C7"      +dddddddddddddddddddddddddddddd+       \0"\
+    C7"    `sdddddddddddddddddddddddddddddddds`     \0"\
+    C7"   `ydddddddddddd++hdddddddddddddddddddy`    \0"\
+    C7"  .hddddddddddd+`  `+ddddh:-sdddddddddddh.   \0"\
+    C7"  hdddddddddd+`      `+y:    .sddddddddddh   \0"\
+    C7"  ddddddddh+`   `//`   `.`     -sddddddddd   \0"\
+    C7"  ddddddh+`   `/hddh/`   `:s-    -sddddddd   \0"\
+    C7"  ddddh+`   `/+/dddddh/`   `+s-    -sddddd   \0"\
+    C7"  ddd+`   `/o` :dddddddh/`   `oy-    .yddd   \0"\
+    C7"  hdddyo+ohddyosdddddddddho+oydddy++ohdddh   \0"\
+    C7"  .hddddddddddddddddddddddddddddddddddddh.   \0"\
+    C7"   `yddddddddddddddddddddddddddddddddddy`    \0"\
+    C7"     `sdddddddddddddddddddddddddddddddds`   \0"\
+    C7"       +dddddddddddddddddddddddddddddd+   \0"\
+    C7"         /dddddddddddddddddddddddddddd/    \0"\
+    C7"         :dddddddddddddddddddddddddd:   \0"\
+    C7"          .hddddddddddddddddddddddh.    \0"\
+    ;
+    mylogo->color = C7;
+    mylogo->height = 20;
+    }else{
     mylogo->logo =
       C4 "          ________               \0"\
       C4 "       _jgN########Ngg_          \0"\
