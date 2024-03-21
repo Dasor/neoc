@@ -224,7 +224,7 @@ char *getTerm(){
   char *result;
   fp = popen ("ps -o comm= -p 2>/dev/null \"$(($(ps -o ppid= -p 2>/dev/null \"$(($(ps -o sid= -p 2> /dev/null \"$$\")))\")))\"", "r");
     fgets(tmp,MAX,fp);
-    if(tmp == NULL || tmp[0] == '\001'){
+    if(tmp[0] == '\001'){
       char *pointer = strtok(getenv("TERM"),"-");
       result = malloc(sizeof(char)*strlen(pointer)+1);
       strcpy(result,pointer);
@@ -241,3 +241,4 @@ char *getTerm(){
   pclose(fp);
   return result;
 }
+
